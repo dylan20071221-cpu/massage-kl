@@ -12,6 +12,7 @@ let isAnimating = false;
 let startX = 0, startY = 0, isDragging = false;
 let cardEl = null;
 let cardPhotoIdx = 0; // 当前卡片显示第几张照片
+let gridPhotoIdx = {}; // 网格卡片照片索引 {techId: index}
 
 // ============================================
 //  首页 - Tinder滑动卡片
@@ -322,14 +323,18 @@ function renderGrid(list) {
     return;
   }
   grid.innerHTML = list.map(t => {
-    const mainPhoto = (t.photos && t.photos[0]) || t.photo || '';
-    const hasPhoto = mainPhoto && (mainPhoto.startsWith('data:')||mainPhoto.startsWith('http'));
+    const allGridPhotos = (t.photos && t.photos.length) ? t.photos : (t.photo ? [t.photo] : []);
+    if (gridPhotoIdx[t.id] === undefined) gridPhotoIdx[t.id] = 0;
+    if (gridPhotoIdx[t.id] >= allGridPhotos.length) gridPhotoIdx[t.id] = 0;
+    const gridMainPhoto = allGridPhotos.length > 0 ? allGridPhotos[gridPhotoIdx[t.id]] : '';
+    const hasGridPhoto = gridMainPhoto && (gridMainPhoto.startsWith('data:')||gridMainPhoto.startsWith('http'));
     return `
-    <div class="grid-card" onclick="window.location.href='technician.html?id=${t.id}'">
-      <div class="grid-card-cover" style="background:${hasPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasPhoto ? 'background-image:url('+mainPhoto+');background-size:cover;background-position:center;' : ''}">
-        ${hasPhoto ? '' : '🦀'}
+    <div class="grid-card">
+      <div class="grid-card-cover" onclick="window.location.href='technician.html?id=${t.id}'" style="background:${hasGridPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasGridPhoto ? 'background-image:url('+gridMainPhoto+');background-size:cover;background-position:center;' : ''}">
+        ${hasGridPhoto ? '' : '🦀'}
+        ${allGridPhotos.length > 1 ? '<div class="grid-photo-nav"><div class="grid-photo-arrow left" onclick="event.stopPropagation();gridPhotoSwitch('+t.id+',-1)">‹</div><div class="grid-photo-arrow right" onclick="event.stopPropagation();gridPhotoSwitch('+t.id+',1)">›</div></div>' : ''}
       </div>
-      <div class="grid-card-body">
+      <div class="grid-card-body" onclick="window.location.href='technician.html?id=${t.id}'">
         <div class="grid-card-top">
           <span class="grid-card-name">${t.name}</span>
           <span class="grid-card-age">${t.age}岁</span>
@@ -354,13 +359,26 @@ function filterGrid(area) {
   renderGrid(getTechniciansByArea(area));
 }
 
-function searchTechs() {
-  const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  if (!q) { renderGrid(technicians); return; }
-  const filtered = technicians.filter(t =>
+function gridPhotoSwitch(id, dir) {
+  const t = getTechnicianById(id);
+  if (!t) return;
+  const allPhotos = (t.photos && t.photos.length) ? t.photos : (t.photo ? [t.photo] : []);
+  if (allPhotos.length < 2) return;
+  if (gridPhotoIdx[id] === undefined) gridPhotoIdx[id] = 0;
+  gridPhotoIdx[id] = (gridPhotoIdx[id] + dir + allPhotos.length) % allPhotos.length;
+  renderGrid(getFilteredTechs());
+}
+
+function getFilteredTechs() {
+  const q = document.getElementById('searchInput')?.value.trim().toLowerCase();
+  if (!q) return technicians;
+  return technicians.filter(t =>
     t.name.includes(q) || t.area.includes(q) || t.specialties.some(s => s.includes(q))
   );
-  renderGrid(filtered);
+}
+
+function searchTechs() {
+  renderGrid(getFilteredTechs());
 }
 
 // ============================================
