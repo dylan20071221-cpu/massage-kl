@@ -66,9 +66,8 @@ function renderStack() {
         <div class="card-name">${t.name} <span>${t.age}岁</span></div>
         <div class="card-meta">
           <span>📍 ${t.area}</span>
-          <span>⏳ ${t.experience}</span>${t.origin ? '
-          <span>🌏 '+t.origin+'</span>' : ''}
-          <span>⭐ ${t.rating}</span>
+          <span>⏳ ${t.experience}</span>
+          <span>${t.origin ? '🌏 '+t.origin + ' · ' : ''}⭐ ${t.rating}</span>
         </div>
         <div class="card-price">💰 ${t.price}</div>
       </div>
