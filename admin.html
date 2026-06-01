@@ -469,6 +469,23 @@
               </div>
             </div>
             <div class="form-row form-row-2">
+              <div class="field-group" style="grid-column:1/-1;">
+                <label>技师照片</label>
+                <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                  <div id="photoPreview-${idx}" style="width:80px;height:80px;border-radius:12px;overflow:hidden;background:var(--admin-input);border:1px solid var(--admin-border);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;">
+                    ${t.photo ? '<img src="'+escHtml(t.photo)+'" style="width:100%;height:100%;object-fit:cover;" />' : '🦀'}
+                  </div>
+                  <div style="flex:1;min-width:120px;">
+                    <input type="file" accept="image/*" onchange="uploadPhoto(${idx},this)" style="font-size:0.8rem;color:var(--admin-muted);" />
+                    <div style="margin-top:4px;">
+                      <input type="text" placeholder="或者粘贴图片URL" value="${escHtml(t.photo&&t.photo.startsWith('http')?t.photo:'')}" onchange="setPhotoUrl(${idx},this.value)" style="width:100%;padding:6px 10px;background:var(--admin-input);border:1px solid var(--admin-border);border-radius:4px;color:white;font-size:0.8rem;font-family:inherit;outline:none;" />
+                    </div>
+                    ${t.photo ? '<button class="btn btn-danger btn-sm" onclick="removePhoto('+idx+')" style="margin-top:4px;">🗑 删除照片</button>' : ''}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row form-row-2">
               <div class="field-group">
                 <label>经验</label>
                 <input type="text" value="${escHtml(t.experience||'')}" onchange="updateField(${idx},'experience',this.value)" />
@@ -540,6 +557,54 @@
 
     function updateField(idx, key, value) {
       data.technicians[idx][key] = value;
+    }
+
+    function uploadPhoto(idx, input) {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('⚠️ 图片不能超过 2MB');
+        input.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        data.technicians[idx].photo = e.target.result;
+        updatePhotoPreview(idx);
+        showToast('✅ 照片已添加');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function setPhotoUrl(idx, url) {
+      url = url.trim();
+      if (!url) return;
+      data.technicians[idx].photo = url;
+      updatePhotoPreview(idx);
+    }
+
+    function removePhoto(idx) {
+      data.technicians[idx].photo = '';
+      updatePhotoPreview(idx);
+      showToast('🗑 照片已删除');
+    }
+
+    function updatePhotoPreview(idx) {
+      const el = document.getElementById(`photoPreview-${idx}`);
+      if (!el) return;
+      const t = data.technicians[idx];
+      if (t.photo) {
+        el.innerHTML = '<img src="'+escHtml(t.photo)+'" style="width:100%;height:100%;object-fit:cover;" />';
+      } else {
+        el.innerHTML = '🦀';
+      }
+      // Re-render to update URL input
+      const idxStr = String(idx);
+      // Just re-render the photo section
+      renderTechs();
+      // Re-open the card
+      const body = document.getElementById(`cardBody-${idx}`);
+      if (body) body.classList.add('open');
     }
 
     function renderSpecialties(idx) {
@@ -638,6 +703,7 @@
         weight: "",
         bio: "",
         serviceRange: "",
+        photo: "",
         services: [{ name: "按摩（1小时）", price: "RM 80" }],
         reviews: []
       });
@@ -658,8 +724,8 @@
       let areasStr = JSON.stringify(data.areas, null, 2);
       let techsStr = JSON.stringify(data.technicians.map(t => {
         // Reorder fields for cleaner output
-        const {id, name, age, area, coverBg, specialties, rating, reviewCount, price, phone, available, experience, height, weight, bio, serviceRange, services, reviews} = t;
-        return {id, name, age, area, coverBg, specialties, rating, reviewCount, price, phone, available, experience, height, weight, bio, serviceRange, services, reviews};
+        const {id, name, age, area, coverBg, specialties, rating, reviewCount, price, phone, available, experience, height, weight, bio, serviceRange, photo, services, reviews} = t;
+        return {id, name, age, area, coverBg, specialties, rating, reviewCount, price, phone, available, experience, height, weight, bio, serviceRange, photo, services, reviews};
       }), null, 2);
 
       const output = `/**

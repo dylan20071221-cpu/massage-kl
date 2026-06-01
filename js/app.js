@@ -38,10 +38,11 @@ function renderStack() {
     return;
   }
   const t = currentTechs[currentIdx];
+  const hasPhoto = t.photo && (t.photo.startsWith('data:') || t.photo.startsWith('http'));
   stack.innerHTML = `
     <div class="swipe-card" id="swipeCard">
-      <div class="card-media" style="background:${t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)'}">
-        🦀
+      <div class="card-media" style="background:${hasPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasPhoto ? 'background-image:url('+t.photo+');background-size:cover;background-position:center;' : ''}">
+        ${hasPhoto ? '' : '🦀'}
       </div>
       <div class="card-overlay"></div>
       <div class="card-label like">❤️ 喜欢</div>
@@ -266,8 +267,8 @@ function renderGrid(list) {
   }
   grid.innerHTML = list.map(t => `
     <div class="grid-card" onclick="window.location.href='technician.html?id=${t.id}'">
-      <div class="grid-card-cover" style="background:${t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)'}">
-        🦀
+      <div class="grid-card-cover" style="background:${(t.photo && (t.photo.startsWith('data:')||t.photo.startsWith('http'))) ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${(t.photo && (t.photo.startsWith('data:')||t.photo.startsWith('http'))) ? 'background-image:url('+t.photo+');background-size:cover;background-position:center;' : ''}">
+        ${(t.photo && (t.photo.startsWith('data:')||t.photo.startsWith('http'))) ? '' : '🦀'}
       </div>
       <div class="grid-card-body">
         <div class="grid-card-top">
@@ -314,9 +315,10 @@ function initDetail() {
   const t = getTechnicianById(id);
   if (!t) { container.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-light);">找不到技师</div>'; return; }
   document.title = `${t.name} - 按按摩`;
+  const hasPhoto = t.photo && (t.photo.startsWith('data:') || t.photo.startsWith('http'));
   container.innerHTML = `
-    <div class="detail-cover" style="background:${t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)'}">
-      <span style="font-size:5rem;">🦀</span>
+    <div class="detail-cover" style="background:${hasPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasPhoto ? 'background-image:url('+t.photo+');background-size:cover;background-position:center top;' : ''}">
+      ${hasPhoto ? '' : '<span style="font-size:5rem;">🦀</span>'}
       <div class="detail-cover-overlay"></div>
       <button class="detail-close" onclick="history.back()">←</button>
     </div>
