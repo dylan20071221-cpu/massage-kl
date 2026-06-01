@@ -66,7 +66,8 @@ function renderStack() {
         <div class="card-name">${t.name} <span>${t.age}岁</span></div>
         <div class="card-meta">
           <span>📍 ${t.area}</span>
-          <span>⏳ ${t.experience}</span>
+          <span>⏳ ${t.experience}</span>${t.origin ? '
+          <span>🌏 '+t.origin+'</span>' : ''}
           <span>⭐ ${t.rating}</span>
         </div>
         <div class="card-price">💰 ${t.price}</div>
@@ -420,7 +421,7 @@ function initDetail() {
       <div class="detail-meta">
         <span>📍 ${t.area}</span>
         <span>⏳ ${t.experience}</span>
-        <span>📏 ${t.height || '?'} · ${t.weight || '?'}${t.bust ? ' · 👙 '+t.bust : ''}</span>
+        <span>📏 ${t.height || '?'} · ${t.weight || '?'}${t.bust ? ' · 👙 '+t.bust : ''}${t.origin ? ' · 🌏 '+t.origin : ''}</span>
         <span>⭐ ${t.rating}</span>
       </div>
       <div class="detail-specs">
