@@ -50,7 +50,7 @@ function renderStack() {
   const hasCardPhoto = currentCardPhoto && (currentCardPhoto.startsWith('data:') || currentCardPhoto.startsWith('http'));
   stack.innerHTML = `
     <div class="swipe-card" id="swipeCard">
-      <div class="card-media" id="cardMedia" style="background:${hasCardPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasCardPhoto ? 'background-image:url('+currentCardPhoto+');background-size:cover;background-position:center;' : ''}">
+      <div class="card-media" id="cardMedia" style="background:${hasCardPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasCardPhoto ? 'background-image:url('+currentCardPhoto+');background-size:contain;background-repeat:no-repeat;background-position:center;' : ''}">
         ${hasCardPhoto ? '' : '🦀'}
         ${totalCardPhotos > 1 ? '<div class="card-photo-nav" onclick="event.stopPropagation();"><div class="card-photo-arrow left" onclick="cardPhotoPrev(event)">‹</div><div class="card-photo-arrow right" onclick="cardPhotoNext(event)">›</div></div>' : ''}
       </div>
@@ -330,7 +330,7 @@ function renderGrid(list) {
     const hasGridPhoto = gridMainPhoto && (gridMainPhoto.startsWith('data:')||gridMainPhoto.startsWith('http'));
     return `
     <div class="grid-card">
-      <div class="grid-card-cover" onclick="window.location.href='technician.html?id=${t.id}'" style="background:${hasGridPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasGridPhoto ? 'background-image:url('+gridMainPhoto+');background-size:cover;background-position:center;' : ''}">
+      <div class="grid-card-cover" onclick="window.location.href='technician.html?id=${t.id}'" style="background:${hasGridPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasGridPhoto ? 'background-image:url('+gridMainPhoto+');background-size:contain;background-repeat:no-repeat;background-position:center;' : ''}">
         ${hasGridPhoto ? '' : '🦀'}
         ${allGridPhotos.length > 1 ? '<div class="grid-photo-nav"><div class="grid-photo-arrow left" onclick="event.stopPropagation();gridPhotoSwitch('+t.id+',-1)">‹</div><div class="grid-photo-arrow right" onclick="event.stopPropagation();gridPhotoSwitch('+t.id+',1)">›</div></div>' : ''}
       </div>
@@ -408,7 +408,7 @@ function initDetail() {
   const hasPhotos = photos.some(p => p.startsWith('data:')||p.startsWith('http'));
   const mainPhoto = photos[0] || '';
   container.innerHTML = `
-    <div class="detail-cover" style="background:${hasPhotos ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasPhotos ? 'background-image:url('+mainPhoto+');background-size:cover;background-position:center top;' : ''}">
+    <div class="detail-cover" style="background:${hasPhotos ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasPhotos ? 'background-image:url('+mainPhoto+');background-size:contain;background-repeat:no-repeat;background-position:center;' : ''}">
       ${hasPhotos ? '' : '<span style="font-size:5rem;">🦀</span>'}
       <div class="detail-cover-overlay"></div>
       <button class="detail-close" onclick="history.back()">←</button>
