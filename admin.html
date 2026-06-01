@@ -337,6 +337,10 @@
         <input type="text" id="cfg-whatsapp" />
       </div>
       <div class="config-field">
+        <label>Telegram 用户名</label>
+        <input type="text" id="cfg-telegram" placeholder="如：my_massage_bot" />
+      </div>
+      <div class="config-field">
         <label>服务区域（逗号分隔）</label>
         <textarea id="cfg-areas" rows="2"></textarea>
       </div>
@@ -363,6 +367,7 @@
       siteName: "按按摩",
       tagline: "大马正规按摩 · 上门预约",
       whatsappNumber: "601114155848",
+      telegram: "",
       areas: ["吉隆坡", "Cheras", "Puchong", "Kajang", "Setapak", "Subang", "Petaling Jaya", "Ampang"],
       technicians: [
         { id: 1, name: "小玲", age: 28, area: "Cheras", coverBg: "linear-gradient(135deg, #667eea, #764ba2)", specialties: ["泰式按摩", "肩颈理疗", "精油推拿"], rating: 4.8, reviewCount: 126, price: "RM 90/小时", phone: "601114155848", available: true, experience: "8年经验", height: "162cm", weight: "52kg", bio: "精通泰式古法按摩，擅长肩颈放松和全身拉伸。上门服务态度好，准时守约，顾客回头率极高。", serviceRange: "Cheras及周边5公里", photos: [], videoUrl: "", services: [{name:"泰式按摩（1小时）",price:"RM 90"},{name:"肩颈理疗（45分钟）",price:"RM 70"},{name:"全身精油推拿（1.5小时）",price:"RM 130"}], reviews: [{user:"匿名用户",rating:5,text:"手法很好，按完整个人都松了"},{user:"Alex",rating:5,text:"准时上门，态度好，推荐！"}] },
@@ -395,6 +400,7 @@
       document.getElementById('cfg-siteName').value = data.siteName;
       document.getElementById('cfg-tagline').value = data.tagline;
       document.getElementById('cfg-whatsapp').value = data.whatsappNumber;
+      document.getElementById('cfg-telegram').value = data.telegram || '';
       document.getElementById('cfg-areas').value = data.areas.join(', ');
     }
 
@@ -402,6 +408,7 @@
       data.siteName = document.getElementById('cfg-siteName').value.trim();
       data.tagline = document.getElementById('cfg-tagline').value.trim();
       data.whatsappNumber = document.getElementById('cfg-whatsapp').value.trim();
+      data.telegram = document.getElementById('cfg-telegram').value.trim();
       data.areas = document.getElementById('cfg-areas').value.split(/[,，\s]+/).filter(Boolean);
       showToast('✅ 网站设置已保存');
     }
@@ -806,6 +813,7 @@ const SITE_CONFIG = {
   siteName: ${JSON.stringify(data.siteName)},
   tagline: ${JSON.stringify(data.tagline)},
   whatsappNumber: "${data.whatsappNumber}",
+  telegram: "${data.telegram}",
   areas: ${areasStr},
 };
 
@@ -840,7 +848,7 @@ function getTechniciansByArea(area) {
       const w = window.open('', '_blank');
       w.document.write('<html><head><title>数据预览</title><style>body{background:#0f0f1a;color:#e2e8f0;font-family:monospace;padding:20px;white-space:pre-wrap;font-size:13px;line-height:1.5;}h2{color:#8b5cf6;}hr{border-color:#2a2a4a;}</style></head><body>');
       w.document.write('<h2>📋 SITE_CONFIG</h2>');
-      w.document.write(JSON.stringify({siteName:data.siteName,tagline:data.tagline,whatsappNumber:data.whatsappNumber,areas:data.areas}, null, 2));
+      w.document.write(JSON.stringify({siteName:data.siteName,tagline:data.tagline,whatsappNumber:data.whatsappNumber,telegram:data.telegram,areas:data.areas}, null, 2));
       w.document.write('<hr><h2>👩‍⚕️ Technicians (' + data.technicians.length + ')</h2>');
       data.technicians.forEach((t, i) => {
         w.document.write(`<h3 style="color:#f59e0b;">#${t.id} ${t.name} (${t.area}) - ${t.price}</h3>`);

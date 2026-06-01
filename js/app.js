@@ -245,6 +245,23 @@ function showToast(msg) {
 
 function initExplore() {
   document.title = '浏览 - ' + (SITE_CONFIG && SITE_CONFIG.siteName) || document.title;
+  // 标语横幅
+  const banner = document.getElementById('exploreBanner');
+  if (banner && SITE_CONFIG.tagline) {
+    let html = '<div>' + SITE_CONFIG.tagline + '</div>';
+    const contactHtml = [];
+    if (SITE_CONFIG.whatsappNumber) {
+      contactHtml.push('<a class="wa-btn" href="https://wa.me/' + SITE_CONFIG.whatsappNumber + '" target="_blank">💬 WhatsApp</a>');
+    }
+    if (SITE_CONFIG.telegram) {
+      contactHtml.push('<a class="tg-btn" href="https://t.me/' + SITE_CONFIG.telegram + '" target="_blank">✈️ Telegram</a>');
+    }
+    if (contactHtml.length) {
+      html += '<div class="banner-contact">' + contactHtml.join('') + '</div>';
+    }
+    banner.innerHTML = html;
+    banner.style.display = 'block';
+  }
   const bar = document.getElementById('filterBar');
   const grid = document.getElementById('exploreGrid');
   if (!grid) return;
