@@ -6,7 +6,7 @@
 const SITE_CONFIG = {
   siteName: "大马顶级会所，顶级水疗",
   tagline: "我们服务宗旨：诚信经营：服务至上：怀着期待而来，装着满意而归，一次体验，此生无憾…",
-  whatsappNumber: "60111220155",
+  whatsappNumber: "601114155848",
   telegram: "",
   areas: [
   "吉隆坡",
