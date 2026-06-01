@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>预约 - 按按摩</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body { background: var(--bg); color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="form-screen" style="position:static;min-height:100vh;">
+    <button class="form-close" onclick="history.back()">←</button>
+    <div class="form-title" id="formTitle">预约按摩</div>
+    <div class="form-subtitle">填写信息后通过 WhatsApp 联系确认</div>
+    <form onsubmit="submitBooking(event)">
+      <div class="form-group">
+        <label class="form-label">选择技师</label>
+        <select class="form-select" id="bookTech" required>
+          <option value="">请选择技师</option>
+        </select>
+        <div id="bookTechInfo"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">选择服务</label>
+        <select class="form-select" id="bookService" required>
+          <option value="">请先选择技师</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">日期</label>
+          <input type="date" class="form-input" id="bookDate" required />
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">时间</label>
+          <select class="form-select" id="bookTime" required>
+            <option value="">选择</option>
+            <option>09:00</option><option>10:00</option><option>11:00</option>
+            <option>12:00</option><option>13:00</option><option>14:00</option>
+            <option>15:00</option><option>16:00</option><option>17:00</option>
+            <option>18:00</option><option>19:00</option><option>20:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">你的姓名</label>
+        <input type="text" class="form-input" id="bookName" placeholder="请输入姓名" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">WhatsApp 号码</label>
+        <input type="tel" class="form-input" id="bookPhone" placeholder="012-3456789" required />
+        <div class="form-helper">用于联系确认预约</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">上门地址（选填）</label>
+        <textarea class="form-textarea" id="bookAddress" placeholder="区域、街道、门牌…"></textarea>
+      </div>
+      <button type="submit" class="form-submit">💬 提交预约</button>
+    </form>
+  </div>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
