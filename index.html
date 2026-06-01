@@ -34,6 +34,12 @@
   <div class="toast" id="toast"></div>
 
   <script src="js/data.js"></script>
+  <script>
+    // 动态更新标题和logo
+    document.title = SITE_CONFIG.siteName + ' - ' + SITE_CONFIG.tagline;
+    const logo = document.querySelector('.logo');
+    if (logo) logo.textContent = '🦀 ' + SITE_CONFIG.siteName;
+  </script>
   <script src="js/app.js"></script>
 </body>
 </html>

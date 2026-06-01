@@ -17,6 +17,7 @@ let cardEl = null;
 // ============================================
 
 function initSwipe() {
+  document.title = (SITE_CONFIG && SITE_CONFIG.siteName) + ' - ' + (SITE_CONFIG && SITE_CONFIG.tagline) || document.title;
   currentTechs = [...technicians];
   currentIdx = 0;
   renderStack();
@@ -243,6 +244,7 @@ function showToast(msg) {
 // ============================================
 
 function initExplore() {
+  document.title = '浏览 - ' + (SITE_CONFIG && SITE_CONFIG.siteName) || document.title;
   const bar = document.getElementById('filterBar');
   const grid = document.getElementById('exploreGrid');
   if (!grid) return;
@@ -401,6 +403,7 @@ function switchDetailPhoto(id, idx) {
 // ============================================
 
 function initBooking() {
+  document.title = '预约 - ' + (SITE_CONFIG && SITE_CONFIG.siteName) || document.title;
   const techSel = document.getElementById('bookTech');
   const servSel = document.getElementById('bookService');
   if (!techSel) return;
@@ -494,6 +497,7 @@ function submitBooking(e) {
 // ============================================
 
 function initSuccess() {
+  document.title = '预约成功 - ' + (SITE_CONFIG && SITE_CONFIG.siteName) || document.title;
   const box = document.getElementById('successBox');
   const link = document.getElementById('waLink');
   if (!box) return;
