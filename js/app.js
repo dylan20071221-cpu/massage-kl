@@ -38,7 +38,7 @@ function renderStack() {
     return;
   }
   const t = currentTechs[currentIdx];
-  const mainPhoto = t.photos && t.photos[0];
+  const mainPhoto = (t.photos && t.photos[0]) || t.photo || '';
   const hasPhoto = mainPhoto && (mainPhoto.startsWith('data:') || mainPhoto.startsWith('http'));
   stack.innerHTML = `
     <div class="swipe-card" id="swipeCard">
@@ -267,7 +267,7 @@ function renderGrid(list) {
     return;
   }
   grid.innerHTML = list.map(t => {
-    const mainPhoto = t.photos && t.photos[0];
+    const mainPhoto = (t.photos && t.photos[0]) || t.photo || '';
     const hasPhoto = mainPhoto && (mainPhoto.startsWith('data:')||mainPhoto.startsWith('http'));
     return `
     <div class="grid-card" onclick="window.location.href='technician.html?id=${t.id}'">
@@ -331,7 +331,7 @@ function initDetail() {
   const t = getTechnicianById(id);
   if (!t) { container.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-light);">找不到技师</div>'; return; }
   document.title = `${t.name} - 按按摩`;
-  const photos = t.photos && t.photos.length ? t.photos : [];
+  const photos = (t.photos && t.photos.length) ? t.photos : (t.photo ? [t.photo] : []);
   const hasPhotos = photos.some(p => p.startsWith('data:')||p.startsWith('http'));
   const mainPhoto = photos[0] || '';
   container.innerHTML = `
