@@ -50,8 +50,8 @@ function renderStack() {
   const hasCardPhoto = currentCardPhoto && (currentCardPhoto.startsWith('data:') || currentCardPhoto.startsWith('http'));
   stack.innerHTML = `
     <div class="swipe-card" id="swipeCard">
-      <div class="card-media" id="cardMedia" style="background:${hasCardPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasCardPhoto ? 'background-image:url('+currentCardPhoto+');background-size:contain;background-repeat:no-repeat;background-position:center;' : ''}">
-        ${hasCardPhoto ? '' : '🦀'}
+      <div class="card-media" id="cardMedia">
+        ${hasCardPhoto ? '<img src="'+currentCardPhoto+'" style="width:100%;height:100%;object-fit:cover;" />' : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:'+(t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')+';font-size:5rem;">🦀</div>'}
         ${totalCardPhotos > 1 ? '<div class="card-photo-nav" onclick="event.stopPropagation();"><div class="card-photo-arrow left" onclick="cardPhotoPrev(event)">‹</div><div class="card-photo-arrow right" onclick="cardPhotoNext(event)">›</div></div>' : ''}
       </div>
       <div class="card-overlay"></div>
