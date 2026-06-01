@@ -361,9 +361,18 @@
 
   <div class="toast" id="toast"></div>
 
+  <script src="js/data.js"></script>
   <script>
     // ===== Data =====
-    let data = {
+    // 优先从 data.js 读取，没有则用默认值
+    let data = (typeof SITE_CONFIG !== 'undefined') ? {
+      siteName: SITE_CONFIG.siteName || "按按摩",
+      tagline: SITE_CONFIG.tagline || "大马正规按摩 · 上门预约",
+      whatsappNumber: SITE_CONFIG.whatsappNumber || "601114155848",
+      telegram: SITE_CONFIG.telegram || "",
+      areas: SITE_CONFIG.areas || ["吉隆坡", "Cheras", "Puchong", "Kajang", "Setapak", "Subang", "Petaling Jaya", "Ampang"],
+      technicians: (typeof technicians !== 'undefined') ? JSON.parse(JSON.stringify(technicians)) : []
+    } : {
       siteName: "按按摩",
       tagline: "大马正规按摩 · 上门预约",
       whatsappNumber: "601114155848",
@@ -382,7 +391,7 @@
     };
 
     // ===== State =====
-    let nextId = 9;
+    let nextId = data.technicians.length ? Math.max(...data.technicians.map(t => t.id)) + 1 : 9;
     let currentTab = 'config';
 
     // ===== Tab =====
