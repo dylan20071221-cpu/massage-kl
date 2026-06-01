@@ -11,6 +11,7 @@ let currentIdx = 0;
 let isAnimating = false;
 let startX = 0, startY = 0, isDragging = false;
 let cardEl = null;
+let cardPhotoIdx = 0; // 当前卡片显示第几张照片
 
 // ============================================
 //  首页 - Tinder滑动卡片
@@ -39,14 +40,21 @@ function renderStack() {
     return;
   }
   const t = currentTechs[currentIdx];
-  const mainPhoto = (t.photos && t.photos[0]) || t.photo || '';
-  const hasPhoto = mainPhoto && (mainPhoto.startsWith('data:') || mainPhoto.startsWith('http'));
+  // 收集所有可用的照片
+  const allPhotos = (t.photos && t.photos.length) ? t.photos : (t.photo ? [t.photo] : []);
+  const totalCardPhotos = allPhotos.length;
+  // 确保 cardPhotoIdx 不越界
+  if (cardPhotoIdx >= totalCardPhotos) cardPhotoIdx = 0;
+  const currentCardPhoto = totalCardPhotos > 0 ? allPhotos[cardPhotoIdx] : '';
+  const hasCardPhoto = currentCardPhoto && (currentCardPhoto.startsWith('data:') || currentCardPhoto.startsWith('http'));
   stack.innerHTML = `
     <div class="swipe-card" id="swipeCard">
-      <div class="card-media" style="background:${hasPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasPhoto ? 'background-image:url('+mainPhoto+');background-size:cover;background-position:center;' : ''}">
-        ${hasPhoto ? '' : '🦀'}
+      <div class="card-media" id="cardMedia" style="background:${hasCardPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasCardPhoto ? 'background-image:url('+currentCardPhoto+');background-size:cover;background-position:center;' : ''}">
+        ${hasCardPhoto ? '' : '🦀'}
+        ${totalCardPhotos > 1 ? '<div class="card-photo-nav" onclick="event.stopPropagation();"><div class="card-photo-arrow left" onclick="cardPhotoPrev(event)">‹</div><div class="card-photo-arrow right" onclick="cardPhotoNext(event)">›</div></div>' : ''}
       </div>
       <div class="card-overlay"></div>
+      ${totalCardPhotos > 1 ? '<div class="card-photo-dots">'+allPhotos.map((p, i) => '<span class="card-dot'+(i===cardPhotoIdx?' active':'')+'" onclick="event.stopPropagation();jumpCardPhoto('+i+','+currentIdx+')"></span>').join('')+'</div>' : ''}
       <div class="card-label like">❤️ 喜欢</div>
       <div class="card-label nope">👋 跳过</div>
       <div class="card-counter">${currentIdx + 1}/${currentTechs.length}</div>
@@ -200,16 +208,44 @@ function swipeLike() {
   setTimeout(() => nextCard(), 300);
 }
 
-function nextCard() {
-  currentIdx++;
-  isAnimating = false;
+function resetCards() {
+  currentIdx = 0;
+  cardPhotoIdx = 0;
+  currentTechs = [...technicians];
   renderStack();
   renderActions();
 }
 
-function resetCards() {
-  currentIdx = 0;
-  currentTechs = [...technicians];
+// 卡片照片翻页
+function cardPhotoNext(e) {
+  if (e) e.stopPropagation();
+  const t = currentTechs[currentIdx];
+  const photos = (t.photos && t.photos.length) ? t.photos : (t.photo ? [t.photo] : []);
+  if (photos.length < 2) return;
+  cardPhotoIdx = (cardPhotoIdx + 1) % photos.length;
+  renderStack();
+  renderActions();
+}
+function cardPhotoPrev(e) {
+  if (e) e.stopPropagation();
+  const t = currentTechs[currentIdx];
+  const photos = (t.photos && t.photos.length) ? t.photos : (t.photo ? [t.photo] : []);
+  if (photos.length < 2) return;
+  cardPhotoIdx = (cardPhotoIdx - 1 + photos.length) % photos.length;
+  renderStack();
+  renderActions();
+}
+function jumpCardPhoto(idx, techIdx) {
+  if (techIdx !== currentIdx) return;
+  cardPhotoIdx = idx;
+  renderStack();
+  renderActions();
+}
+
+function nextCard() {
+  currentIdx++;
+  cardPhotoIdx = 0;
+  isAnimating = false;
   renderStack();
   renderActions();
 }
