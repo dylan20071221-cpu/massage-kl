@@ -289,7 +289,7 @@ function renderGrid(list) {
         </div>
       </div>
     </div>
-  `).join('');
+  `;}).join('');
 }
 
 function filterGrid(area) {
