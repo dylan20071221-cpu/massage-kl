@@ -341,6 +341,7 @@ function renderGrid(list) {
           <span class="grid-card-age">${t.age}岁</span>
         </div>
         <div class="grid-card-area">📍 ${t.area} · ${t.experience}</div>
+        <div class="grid-card-bodyinfo">📏${t.height||'?'} ${t.weight||'?'}${t.bust?' 👙'+t.bust:''}${t.origin?' 🌏'+t.origin:''}</div>
         <div class="grid-card-tags">
           ${t.specialties.slice(0,3).map(s => `<span class="grid-card-tag">#${s}</span>`).join('')}
         </div>
