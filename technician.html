@@ -8,6 +8,14 @@
   <style>
     body { background: var(--bg); color: var(--text); }
     .detail-screen { position: fixed; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .detail-photo-dots { position:absolute; bottom:60px; left:0; right:0; display:flex; justify-content:center; gap:6px; z-index:5; }
+    .detail-photo-dots .dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.4); cursor:pointer; }
+    .detail-photo-dots .dot.active { background:white; }
+    .detail-thumbs { display:flex; gap:6px; padding:4px 16px 0; overflow-x:auto; }
+    .detail-thumbs::-webkit-scrollbar { height:3px; }
+    .detail-thumbs::-webkit-scrollbar-thumb { background:var(--border); border-radius:9px; }
+    .detail-thumb { width:56px; height:56px; border-radius:8px; object-fit:cover; cursor:pointer; border:2px solid transparent; flex-shrink:0; transition:all 0.2s; }
+    .detail-thumb.active { border-color:var(--primary); }
   </style>
 </head>
 <body>

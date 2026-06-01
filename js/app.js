@@ -38,10 +38,11 @@ function renderStack() {
     return;
   }
   const t = currentTechs[currentIdx];
-  const hasPhoto = t.photo && (t.photo.startsWith('data:') || t.photo.startsWith('http'));
+  const mainPhoto = t.photos && t.photos[0];
+  const hasPhoto = mainPhoto && (mainPhoto.startsWith('data:') || mainPhoto.startsWith('http'));
   stack.innerHTML = `
     <div class="swipe-card" id="swipeCard">
-      <div class="card-media" style="background:${hasPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasPhoto ? 'background-image:url('+t.photo+');background-size:cover;background-position:center;' : ''}">
+      <div class="card-media" style="background:${hasPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasPhoto ? 'background-image:url('+mainPhoto+');background-size:cover;background-position:center;' : ''}">
         ${hasPhoto ? '' : '🦀'}
       </div>
       <div class="card-overlay"></div>
@@ -265,10 +266,13 @@ function renderGrid(list) {
     grid.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-light);">没有找到技师</div>`;
     return;
   }
-  grid.innerHTML = list.map(t => `
+  grid.innerHTML = list.map(t => {
+    const mainPhoto = t.photos && t.photos[0];
+    const hasPhoto = mainPhoto && (mainPhoto.startsWith('data:')||mainPhoto.startsWith('http'));
+    return `
     <div class="grid-card" onclick="window.location.href='technician.html?id=${t.id}'">
-      <div class="grid-card-cover" style="background:${(t.photo && (t.photo.startsWith('data:')||t.photo.startsWith('http'))) ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${(t.photo && (t.photo.startsWith('data:')||t.photo.startsWith('http'))) ? 'background-image:url('+t.photo+');background-size:cover;background-position:center;' : ''}">
-        ${(t.photo && (t.photo.startsWith('data:')||t.photo.startsWith('http'))) ? '' : '🦀'}
+      <div class="grid-card-cover" style="background:${hasPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasPhoto ? 'background-image:url('+mainPhoto+');background-size:cover;background-position:center;' : ''}">
+        ${hasPhoto ? '' : '🦀'}
       </div>
       <div class="grid-card-body">
         <div class="grid-card-top">
@@ -327,13 +331,17 @@ function initDetail() {
   const t = getTechnicianById(id);
   if (!t) { container.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-light);">找不到技师</div>'; return; }
   document.title = `${t.name} - 按按摩`;
-  const hasPhoto = t.photo && (t.photo.startsWith('data:') || t.photo.startsWith('http'));
+  const photos = t.photos && t.photos.length ? t.photos : [];
+  const hasPhotos = photos.some(p => p.startsWith('data:')||p.startsWith('http'));
+  const mainPhoto = photos[0] || '';
   container.innerHTML = `
-    <div class="detail-cover" style="background:${hasPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasPhoto ? 'background-image:url('+t.photo+');background-size:cover;background-position:center top;' : ''}">
-      ${hasPhoto ? '' : '<span style="font-size:5rem;">🦀</span>'}
+    <div class="detail-cover" style="background:${hasPhotos ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasPhotos ? 'background-image:url('+mainPhoto+');background-size:cover;background-position:center top;' : ''}">
+      ${hasPhotos ? '' : '<span style="font-size:5rem;">🦀</span>'}
       <div class="detail-cover-overlay"></div>
       <button class="detail-close" onclick="history.back()">←</button>
+      ${hasPhotos && photos.length > 1 ? '<div class="detail-photo-dots">'+photos.map((p,i) => '<span class="dot '+(i===0?'active':'')+'" onclick="switchDetailPhoto('+t.id+','+i+')"></span>').join('')+'</div>' : ''}
     </div>
+    ${hasPhotos ? '<div class="detail-thumbs">'+photos.map((p,i) => '<img src="'+p+'" class="detail-thumb'+(i===0?' active':'')+'" onclick="switchDetailPhoto('+t.id+','+i+')" />').join('')+'</div>' : ''}
     <div class="detail-body">
       <div class="detail-name">${t.name} <small>${t.age}岁</small></div>
       <div class="detail-meta">
@@ -374,6 +382,18 @@ function initDetail() {
       <a href="book.html?techId=${t.id}" class="detail-book-btn">💬 立即预约 ${t.name}</a>
     </div>
   `;
+}
+
+function switchDetailPhoto(id, idx) {
+  const t = getTechnicianById(id);
+  if (!t || !t.photos || !t.photos[idx]) return;
+  const cover = document.querySelector('.detail-cover');
+  if (cover) {
+    cover.style.backgroundImage = 'url('+t.photos[idx]+')';
+  }
+  document.querySelectorAll('.detail-thumb').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
 }
 
 // ============================================
