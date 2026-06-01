@@ -330,8 +330,8 @@ function renderGrid(list) {
     const hasGridPhoto = gridMainPhoto && (gridMainPhoto.startsWith('data:')||gridMainPhoto.startsWith('http'));
     return `
     <div class="grid-card">
-      <div class="grid-card-cover" onclick="window.location.href='technician.html?id=${t.id}'" style="background:${hasGridPhoto ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasGridPhoto ? 'background-image:url('+gridMainPhoto+');background-size:contain;background-repeat:no-repeat;background-position:center;' : ''}">
-        ${hasGridPhoto ? '' : '🦀'}
+      <div class="grid-card-cover" onclick="window.location.href='technician.html?id=${t.id}'" style="background:${hasGridPhoto ? '#111' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};">
+        ${hasGridPhoto ? '<img src="'+gridMainPhoto+'" style="width:100%;height:100%;object-fit:contain;padding:8px;" />' : '🦀'}
         ${allGridPhotos.length > 1 ? '<div class="grid-photo-nav"><div class="grid-photo-arrow left" onclick="event.stopPropagation();gridPhotoSwitch('+t.id+',-1)">‹</div><div class="grid-photo-arrow right" onclick="event.stopPropagation();gridPhotoSwitch('+t.id+',1)">›</div></div>' : ''}
       </div>
       <div class="grid-card-body" onclick="window.location.href='technician.html?id=${t.id}'">
@@ -408,8 +408,8 @@ function initDetail() {
   const hasPhotos = photos.some(p => p.startsWith('data:')||p.startsWith('http'));
   const mainPhoto = photos[0] || '';
   container.innerHTML = `
-    <div class="detail-cover" style="background:${hasPhotos ? '#1a1230' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasPhotos ? 'background-image:url('+mainPhoto+');background-size:contain;background-repeat:no-repeat;background-position:center;' : ''}">
-      ${hasPhotos ? '' : '<span style="font-size:5rem;">🦀</span>'}
+    <div class="detail-cover" id="detailCover" style="background:${hasPhotos ? '#111' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};overflow:hidden;">
+      ${hasPhotos ? '<img src="'+mainPhoto+'" id="detailCoverImg" style="width:100%;height:100%;object-fit:contain;padding:10px;" />' : '<span style="font-size:5rem;">🦀</span>'}
       <div class="detail-cover-overlay"></div>
       <button class="detail-close" onclick="history.back()">←</button>
       ${hasPhotos && photos.length > 1 ? '<div class="detail-photo-dots">'+photos.map((p,i) => '<span class="dot '+(i===0?'active':'')+'" onclick="switchDetailPhoto('+t.id+','+i+')"></span>').join('')+'</div>' : ''}
@@ -460,9 +460,9 @@ function initDetail() {
 function switchDetailPhoto(id, idx) {
   const t = getTechnicianById(id);
   if (!t || !t.photos || !t.photos[idx]) return;
-  const cover = document.querySelector('.detail-cover');
-  if (cover) {
-    cover.style.backgroundImage = 'url('+t.photos[idx]+')';
+  const img = document.getElementById('detailCoverImg');
+  if (img) {
+    img.src = t.photos[idx];
   }
   document.querySelectorAll('.detail-thumb').forEach((el, i) => {
     el.classList.toggle('active', i === idx);
