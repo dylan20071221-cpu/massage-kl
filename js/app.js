@@ -357,7 +357,7 @@ function initDetail() {
         <h3>📝 自我介绍</h3>
         <div class="detail-bio">${t.bio}</div>
       </div>
-      ${t.videoUrl ? '<div class="detail-section"><h3>🎬 视频介绍</h3><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--radius-sm);border:1px solid var(--border);"><iframe src="'+getVideoEmbedUrl(t.videoUrl)+'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allowfullscreen></iframe></div></div>' : ''}
+      ${t.videoUrl ? '<div class="detail-section"><h3>🎬 视频介绍</h3><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--radius-sm);border:1px solid var(--border);background:#000;">'+(t.videoUrl.startsWith('data:') ? '<video src="'+t.videoUrl+'" style="position:absolute;top:0;left:0;width:100%;height:100%;" controls playsinline></video>' : '<iframe src="'+getVideoEmbedUrl(t.videoUrl)+'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allowfullscreen></iframe>')+'</div></div>' : ''}
       <div class="detail-section">
         <h3>💰 服务价格</h3>
         ${t.services.map(s => `

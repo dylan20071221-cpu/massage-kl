@@ -492,11 +492,12 @@
                 <label>视频（可选）</label>
                 <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;">
                   <div id="videoPreview-${idx}" style="width:140px;height:80px;border-radius:8px;overflow:hidden;background:var(--admin-input);border:1px solid var(--admin-border);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:var(--admin-muted);flex-shrink:0;">
-                    ${t.videoUrl ? '🎬' : '无视频'}
+                    ${t.videoUrl ? (t.videoUrl.startsWith('data:') ? '<video src="'+escHtml(t.videoUrl)+'" style="width:100%;height:100%;object-fit:cover;" muted />' : '🎬') : '无视频'}
                   </div>
                   <div style="flex:1;min-width:120px;">
-                    <input type="text" placeholder="YouTube / 视频直链 URL" value="${escHtml(t.videoUrl||'')}" onchange="setVideoUrl(${idx},this.value)" style="width:100%;padding:8px 10px;background:var(--admin-input);border:1px solid var(--admin-border);border-radius:4px;color:white;font-size:0.85rem;font-family:inherit;outline:none;" />
-                    <div style="margin-top:4px;font-size:0.75rem;color:var(--admin-muted);">支持 YouTube 链接或直接视频 URL</div>
+                    <input type="file" accept="video/*" onchange="uploadVideo(${idx},this)" style="font-size:0.8rem;color:var(--admin-muted);margin-bottom:6px;" />
+                    <input type="text" placeholder="或粘贴 YouTube / 视频直链 URL" value="${escHtml(t.videoUrl&&!t.videoUrl.startsWith('data:')?t.videoUrl:'')}" onchange="setVideoUrl(${idx},this.value)" style="width:100%;padding:8px 10px;background:var(--admin-input);border:1px solid var(--admin-border);border-radius:4px;color:white;font-size:0.85rem;font-family:inherit;outline:none;" />
+                    <div style="margin-top:4px;font-size:0.75rem;color:var(--admin-muted);">支持上传视频文件（最大 10MB）或 YouTube / 直链</div>
                     ${t.videoUrl ? '<button class="btn btn-danger btn-sm" onclick="removeVideo('+idx+')" style="margin-top:4px;">🗑 删除视频</button>' : ''}
                   </div>
                 </div>
@@ -637,26 +638,39 @@
       showToast('🗑 已删除');
     }
 
+    function uploadVideo(idx, input) {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 10 * 1024 * 1024) {
+        showToast('⚠️ 视频不能超过 10MB');
+        input.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        data.technicians[idx].videoUrl = e.target.result;
+        input.value = '';
+        renderTechs();
+        const body = document.getElementById(`cardBody-${idx}`);
+        if (body) body.classList.add('open');
+        showToast('✅ 视频已添加');
+      };
+      reader.readAsDataURL(file);
+    }
+
     function setVideoUrl(idx, url) {
       data.technicians[idx].videoUrl = url.trim();
-      updateVideoPreview(idx);
+      renderTechs();
+      const body = document.getElementById(`cardBody-${idx}`);
+      if (body) body.classList.add('open');
     }
 
     function removeVideo(idx) {
       data.technicians[idx].videoUrl = '';
-      updateVideoPreview(idx);
+      renderTechs();
+      const body = document.getElementById(`cardBody-${idx}`);
+      if (body) body.classList.add('open');
       showToast('🗑 视频已删除');
-    }
-
-    function updateVideoPreview(idx) {
-      const el = document.getElementById(`videoPreview-${idx}`);
-      if (!el) return;
-      const t = data.technicians[idx];
-      if (t.videoUrl) {
-        el.innerHTML = '🎬';
-      } else {
-        el.innerHTML = '无视频';
-      }
     }
 
     
