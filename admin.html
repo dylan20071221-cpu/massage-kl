@@ -366,15 +366,15 @@
     // ===== Data =====
     // 优先从 data.js 读取，没有则用默认值
     let data = (typeof SITE_CONFIG !== 'undefined') ? {
-      siteName: SITE_CONFIG.siteName || "按按摩",
+      siteName: SITE_CONFIG.siteName || "大马顶级会所，顶级水疗",
       tagline: SITE_CONFIG.tagline || "大马正规按摩 · 上门预约",
       whatsappNumber: SITE_CONFIG.whatsappNumber || "601114155848",
       telegram: SITE_CONFIG.telegram || "",
       areas: SITE_CONFIG.areas || ["吉隆坡", "Cheras", "Puchong", "Kajang", "Setapak", "Subang", "Petaling Jaya", "Ampang"],
       technicians: (typeof technicians !== 'undefined') ? JSON.parse(JSON.stringify(technicians)) : []
     } : {
-      siteName: "按按摩",
-      tagline: "大马正规按摩 · 上门预约",
+      siteName: "大马顶级会所，顶级水疗",
+      tagline: "",
       whatsappNumber: "601114155848",
       telegram: "",
       areas: ["吉隆坡", "Cheras", "Puchong", "Kajang", "Setapak", "Subang", "Petaling Jaya", "Ampang"],

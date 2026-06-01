@@ -385,7 +385,7 @@ function initDetail() {
   const id = new URLSearchParams(window.location.search).get('id');
   const t = getTechnicianById(id);
   if (!t) { container.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-light);">找不到技师</div>'; return; }
-  document.title = `${t.name} - 按按摩`;
+  document.title = `${t.name} - ${(SITE_CONFIG && SITE_CONFIG.siteName) || '按按摩'}`;
   const photos = (t.photos && t.photos.length) ? t.photos : (t.photo ? [t.photo] : []);
   const hasPhotos = photos.some(p => p.startsWith('data:')||p.startsWith('http'));
   const mainPhoto = photos[0] || '';
@@ -562,7 +562,7 @@ function initSuccess() {
   }
   const b = JSON.parse(data);
   const msg = [
-    `🦀 按按摩 - 新预约`,
+    `🦀 ${(SITE_CONFIG && SITE_CONFIG.siteName) || '按按摩'} - 新预约`,
     ``,
     `💆 技师：${b.techName}`,
     `📋 服务：${b.serviceName} (${b.servicePrice})`,
