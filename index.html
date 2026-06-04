@@ -12,6 +12,10 @@
   .card-photo-arrow.left { border-radius:0 8px 8px 0; }
   .card-photo-arrow.right { border-radius:8px 0 0 8px; }
   .card-photo-dots { position:absolute; bottom:130px; left:0; right:0; display:flex; justify-content:center; gap:5px; z-index:5; }
+  .mode-tabs { display:flex; gap:0; padding:6px 16px 0; justify-content:center; z-index:10; }
+  .mode-tab { padding:8px 24px; border-radius:999px; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.2s; color:var(--text-muted); }
+  .mode-tab.active { background:linear-gradient(135deg,var(--primary),var(--accent)); color:white; box-shadow:0 4px 15px rgba(139,92,246,0.3); }
+  .mode-tab:not(.active):hover { color:var(--text-light); }
   .card-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.35); cursor:pointer; transition:all 0.2s; }
   .card-dot.active { width:18px; border-radius:3px; background:white; }
 </style>
@@ -19,13 +23,16 @@
 <body>
 
   <div class="app" id="app">
-    <!-- 状态栏 -->
+    <!-- 状态栏 / 模式切换 -->
     <div class="status-bar">
       <span class="logo">🦀 按按摩</span>
       <div class="status-icons">
         <span onclick="window.location.href='explore.html'" style="cursor:pointer;">📋</span>
-        <span style="opacity:0.5;">🔔</span>
       </div>
+    </div>
+    <div class="mode-tabs">
+      <span class="mode-tab active" data-mode="tech" onclick="switchMode('tech')">💆 按摩</span>
+      <span class="mode-tab" data-mode="guide" onclick="switchMode('guide')">🤝 地陪</span>
     </div>
 
     <!-- 滑动卡片区域 -->

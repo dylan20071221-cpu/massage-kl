@@ -200,8 +200,12 @@
   <button class="explore-back" onclick="history.back()">←</button>
   <div class="explore-page">
     <div class="explore-header">
-      <h1>📋 全部技师</h1>
-      <p>找到你喜欢的技师</p>
+      <h1>📋 浏览</h1>
+      <p id="exploreSubtitle">找到你喜欢的技师</p>
+    </div>
+    <div style="display:flex;gap:0;padding:0 16px 8px;justify-content:center;">
+      <span class="mode-tab active" data-mode="tech" onclick="switchExploreMode('tech')">💆 按摩</span>
+      <span class="mode-tab" data-mode="guide" onclick="switchExploreMode('guide')">🤝 地陪</span>
     </div>
     <div class="explore-banner" id="exploreBanner"></div>
     <div class="explore-search">

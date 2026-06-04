@@ -13,6 +13,26 @@ let startX = 0, startY = 0, isDragging = false;
 let cardEl = null;
 let cardPhotoIdx = 0; // 当前卡片显示第几张照片
 let gridPhotoIdx = {}; // 网格卡片照片索引 {techId: index}
+let currentMode = 'tech'; // 'tech' | 'guide'
+
+// ============================================
+//  模式切换
+// ============================================
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.mode === mode);
+  });
+  document.title = (mode === 'guide' ? '🤝 地陪 - ' : '💆 按摩 - ') + (SITE_CONFIG && SITE_CONFIG.siteName) || document.title;
+  const logo = document.querySelector('.logo');
+  if (logo) logo.textContent = (mode === 'guide' ? '🤝 ' : '🦀 ') + (SITE_CONFIG && SITE_CONFIG.siteName);
+  currentIdx = 0;
+  cardPhotoIdx = 0;
+  currentTechs = [...(mode === 'guide' ? guides : technicians)];
+  renderStack();
+  renderActions();
+}
 
 // ============================================
 //  首页 - Tinder滑动卡片
@@ -20,7 +40,7 @@ let gridPhotoIdx = {}; // 网格卡片照片索引 {techId: index}
 
 function initSwipe() {
   document.title = (SITE_CONFIG && SITE_CONFIG.siteName) + ' - ' + (SITE_CONFIG && SITE_CONFIG.tagline) || document.title;
-  currentTechs = [...technicians];
+  currentTechs = [...(currentMode === 'guide' ? guides : technicians)];
   currentIdx = 0;
   renderStack();
   renderActions();
@@ -67,6 +87,7 @@ function renderStack() {
         <div class="card-meta">
           <span>📍 ${t.area}</span>
           <span>⏳ ${t.experience}</span>
+          ${currentMode === 'guide' && t.languages ? '<span>🗣️ ' + t.languages.slice(0,3).join('·') + '</span>' : ''}
           <span>${t.origin ? '🌏 '+t.origin + ' · ' : ''}⭐ ${t.rating}</span>
         </div>
         <div class="card-price">💰 ${t.price}</div>
@@ -212,7 +233,7 @@ function swipeLike() {
 function resetCards() {
   currentIdx = 0;
   cardPhotoIdx = 0;
-  currentTechs = [...technicians];
+  currentTechs = [...(currentMode === 'guide' ? guides : technicians)];
   renderStack();
   renderActions();
 }
@@ -258,13 +279,13 @@ function nextCard() {
 function goDetail() {
   const t = currentTechs[currentIdx];
   if (!t) return;
-  window.location.href = `technician.html?id=${t.id}`;
+  window.location.href = `technician.html?id=${t.id}${currentMode === 'guide' ? '&mode=guide' : ''}`;
 }
 
 function goBook() {
   const t = currentTechs[currentIdx];
   if (!t) return;
-  window.location.href = `book.html?techId=${t.id}`;
+  window.location.href = `book.html?techId=${t.id}${currentMode === 'guide' ? '&mode=guide' : ''}`;
 }
 
 function showToast(msg) {
@@ -279,6 +300,33 @@ function showToast(msg) {
 // ============================================
 //  探索页 - 网格浏览
 // ============================================
+
+let exploreMode = 'tech';
+
+function switchExploreMode(mode) {
+  exploreMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.mode === mode);
+  });
+  const sub = document.getElementById('exploreSubtitle');
+  if (sub) sub.textContent = mode === 'guide' ? '找到你喜欢的本地向导' : '找到你喜欢的技师';
+  // Rebuild filters
+  const bar = document.getElementById('filterBar');
+  if (bar) {
+    bar.innerHTML = '<button class="filter-chip active" data-area="all" onclick="filterGrid(\'all\')">全部</button>';
+    const areas = mode === 'guide' ? getAllGuideAreas() : getAllAreas();
+    areas.forEach(a => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-chip';
+      btn.dataset.area = a;
+      btn.textContent = a;
+      btn.onclick = () => filterGrid(a);
+      bar.appendChild(btn);
+    });
+  }
+  const src = mode === 'guide' ? guides : technicians;
+  renderGrid(src);
+}
 
 function initExplore() {
   document.title = '浏览 - ' + (SITE_CONFIG && SITE_CONFIG.siteName) || document.title;
@@ -318,8 +366,10 @@ function initExplore() {
 function renderGrid(list) {
   const grid = document.getElementById('exploreGrid');
   if (!grid) return;
+  const isGuide = exploreMode === 'guide';
+  const emptyText = isGuide ? '没有找到地陪' : '没有找到技师';
   if (!list.length) {
-    grid.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-light);">没有找到技师</div>`;
+    grid.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-light);">${emptyText}</div>`;
     return;
   }
   grid.innerHTML = list.map(t => {
@@ -328,19 +378,21 @@ function renderGrid(list) {
     if (gridPhotoIdx[t.id] >= allGridPhotos.length) gridPhotoIdx[t.id] = 0;
     const gridMainPhoto = allGridPhotos.length > 0 ? allGridPhotos[gridPhotoIdx[t.id]] : '';
     const hasGridPhoto = gridMainPhoto && (gridMainPhoto.startsWith('data:')||gridMainPhoto.startsWith('http'));
+    const modeSuffix = isGuide ? '&mode=guide' : '';
+    const extraInfo = isGuide && t.languages ? '🗣️' + t.languages.slice(0,2).join('/') : '📏' + (t.height||'?') + ' ' + (t.weight||'?') + (t.bust ? ' 👙' + t.bust : '');
     return `
     <div class="grid-card">
-      <div class="grid-card-cover" onclick="window.location.href='technician.html?id=${t.id}'" style="background:${hasGridPhoto ? '#111' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};">
-        ${hasGridPhoto ? '<img src="'+gridMainPhoto+'" style="width:100%;height:100%;object-fit:contain;padding:8px;" />' : '🦀'}
+      <div class="grid-card-cover" onclick="window.location.href='technician.html?id=${t.id}${modeSuffix}'" style="background:${hasGridPhoto ? '#111' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};">
+        ${hasGridPhoto ? '<img src="'+gridMainPhoto+'" style="width:100%;height:100%;object-fit:contain;padding:8px;" />' : (isGuide ? '🤝' : '🦀')}
         ${allGridPhotos.length > 1 ? '<div class="grid-photo-nav"><div class="grid-photo-arrow left" onclick="event.stopPropagation();gridPhotoSwitch('+t.id+',-1)">‹</div><div class="grid-photo-arrow right" onclick="event.stopPropagation();gridPhotoSwitch('+t.id+',1)">›</div></div>' : ''}
       </div>
-      <div class="grid-card-body" onclick="window.location.href='technician.html?id=${t.id}'">
+      <div class="grid-card-body" onclick="window.location.href='technician.html?id=${t.id}${modeSuffix}'">
         <div class="grid-card-top">
           <span class="grid-card-name">${t.name}</span>
           <span class="grid-card-age">${t.age}岁</span>
         </div>
         <div class="grid-card-area">📍 ${t.area} · ${t.experience}</div>
-        <div class="grid-card-bodyinfo">📏${t.height||'?'} ${t.weight||'?'}${t.bust?' 👙'+t.bust:''}${t.origin?' 🌏'+t.origin:''}</div>
+        <div class="grid-card-bodyinfo">${extraInfo}${t.origin?' 🌏'+t.origin:''}</div>
         <div class="grid-card-tags">
           ${t.specialties.slice(0,3).map(s => `<span class="grid-card-tag">#${s}</span>`).join('')}
         </div>
@@ -357,11 +409,13 @@ function filterGrid(area) {
   document.querySelectorAll('.filter-chip').forEach(c => {
     c.classList.toggle('active', c.dataset.area === area);
   });
-  renderGrid(getTechniciansByArea(area));
+  const areaFn = exploreMode === 'guide' ? getGuidesByArea : getTechniciansByArea;
+  renderGrid(areaFn(area));
 }
 
 function gridPhotoSwitch(id, dir) {
-  const t = getTechnicianById(id);
+  const getFn = exploreMode === 'guide' ? getGuideById : getTechnicianById;
+  const t = getFn(id);
   if (!t) return;
   const allPhotos = (t.photos && t.photos.length) ? t.photos : (t.photo ? [t.photo] : []);
   if (allPhotos.length < 2) return;
@@ -372,8 +426,9 @@ function gridPhotoSwitch(id, dir) {
 
 function getFilteredTechs() {
   const q = document.getElementById('searchInput')?.value.trim().toLowerCase();
-  if (!q) return technicians;
-  return technicians.filter(t =>
+  const src = exploreMode === 'guide' ? guides : technicians;
+  if (!q) return src;
+  return src.filter(t =>
     t.name.includes(q) || t.area.includes(q) || t.specialties.some(s => s.includes(q))
   );
 }
@@ -401,16 +456,19 @@ function getVideoEmbedUrl(url) {
 function initDetail() {
   const container = document.getElementById('detailContainer');
   if (!container) return;
-  const id = new URLSearchParams(window.location.search).get('id');
-  const t = getTechnicianById(id);
-  if (!t) { container.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-light);">找不到技师</div>'; return; }
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const mode = params.get('mode') || 'tech';
+  const isGuide = mode === 'guide';
+  const t = isGuide ? getGuideById(id) : getTechnicianById(id);
+  if (!t) { container.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-light);">'+(isGuide?'找不到地陪':'找不到技师')+'</div>'; return; }
   document.title = `${t.name} - ${(SITE_CONFIG && SITE_CONFIG.siteName) || '按按摩'}`;
   const photos = (t.photos && t.photos.length) ? t.photos : (t.photo ? [t.photo] : []);
   const hasPhotos = photos.some(p => p.startsWith('data:')||p.startsWith('http'));
   const mainPhoto = photos[0] || '';
   container.innerHTML = `
     <div class="detail-cover" id="detailCover" style="background:${hasPhotos ? '#111' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};overflow:hidden;">
-      ${hasPhotos ? '<img src="'+mainPhoto+'" id="detailCoverImg" style="width:100%;height:100%;object-fit:contain;padding:10px;" />' : '<span style="font-size:5rem;">🦀</span>'}
+      ${hasPhotos ? '<img src="'+mainPhoto+'" id="detailCoverImg" style="width:100%;height:100%;object-fit:contain;padding:10px;" />' : (isGuide ? '<span style="font-size:5rem;">🤝</span>' : '<span style="font-size:5rem;">🦀</span>')}
       <div class="detail-cover-overlay"></div>
       <button class="detail-close" onclick="history.back()">←</button>
       ${hasPhotos && photos.length > 1 ? '<div class="detail-photo-dots">'+photos.map((p,i) => '<span class="dot '+(i===0?'active':'')+'" onclick="switchDetailPhoto('+t.id+','+i+')"></span>').join('')+'</div>' : ''}
@@ -421,14 +479,15 @@ function initDetail() {
       <div class="detail-meta">
         <span>📍 ${t.area}</span>
         <span>⏳ ${t.experience}</span>
-        <span>📏 ${t.height || '?'} · ${t.weight || '?'}${t.bust ? ' · 👙 '+t.bust : ''}${t.origin ? ' · 🌏 '+t.origin : ''}</span>
+        ${isGuide && t.languages ? '<span>🗣️ ' + t.languages.join(' · ') + '</span>' : '<span>📏 ' + (t.height || '?') + ' · ' + (t.weight || '?') + (t.bust ? ' · 👙 '+t.bust : '') + '</span>'}
+        ${t.origin ? '<span>🌏 '+t.origin + '</span>' : ''}
         <span>⭐ ${t.rating}</span>
       </div>
       <div class="detail-specs">
         ${t.specialties.map(s => `<span class="detail-spec">${s}</span>`).join('')}
       </div>
       <div class="detail-section">
-        <h3>📝 自我介绍</h3>
+        <h3>📝 ${isGuide ? '地陪介绍' : '自我介绍'}</h3>
         <div class="detail-bio">${t.bio}</div>
       </div>
       ${t.videoUrl ? '<div class="detail-section"><h3>🎬 视频介绍</h3><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--radius-sm);border:1px solid var(--border);background:#000;">'+(t.videoUrl.startsWith('data:') ? '<video src="'+t.videoUrl+'" style="position:absolute;top:0;left:0;width:100%;height:100%;" controls playsinline></video>' : '<iframe src="'+getVideoEmbedUrl(t.videoUrl)+'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allowfullscreen></iframe>')+'</div></div>' : ''}
@@ -453,13 +512,15 @@ function initDetail() {
           </div>
         `).join('') : '<p style="color:var(--text-muted);font-size:0.85rem;">暂无评价</p>'}
       </div>
-      <a href="book.html?techId=${t.id}" class="detail-book-btn">💬 立即预约 ${t.name}</a>
+      <a href="book.html?techId=${t.id}${isGuide ? '&mode=guide' : ''}" class="detail-book-btn">💬 立即预约 ${t.name}</a>
     </div>
   `;
 }
 
 function switchDetailPhoto(id, idx) {
-  const t = getTechnicianById(id);
+  const mode = new URLSearchParams(window.location.search).get('mode') || 'tech';
+  const getFn = mode === 'guide' ? getGuideById : getTechnicianById;
+  const t = getFn(id);
   if (!t || !t.photos || !t.photos[idx]) return;
   const img = document.getElementById('detailCoverImg');
   if (img) {
@@ -479,9 +540,14 @@ function initBooking() {
   const techSel = document.getElementById('bookTech');
   const servSel = document.getElementById('bookService');
   if (!techSel) return;
-  const preId = new URLSearchParams(window.location.search).get('techId');
+  const params = new URLSearchParams(window.location.search);
+  const preId = params.get('techId');
+  const mode = params.get('mode') || 'tech';
+  const isGuide = mode === 'guide';
+  const dataList = isGuide ? guides : technicians;
+  const getFn = isGuide ? getGuideById : getTechnicianById;
 
-  technicians.forEach(t => {
+  dataList.forEach(t => {
     const o = document.createElement('option');
     o.value = t.id;
     o.textContent = `${t.name} · ${t.area} · ${t.price}`;
@@ -490,17 +556,17 @@ function initBooking() {
 
   if (preId) {
     techSel.value = preId;
-    updateServices(preId);
-    updateTechInfo(preId);
-    const t = getTechnicianById(preId);
+    updateServices(preId, isGuide);
+    updateTechInfo(preId, isGuide);
+    const t = getFn(preId);
     const title = document.getElementById('formTitle');
     if (title && t) title.textContent = `预约 ${t.name}`;
   }
 
   techSel.addEventListener('change', () => {
-    updateServices(techSel.value);
-    updateTechInfo(techSel.value);
-    const t = getTechnicianById(techSel.value);
+    updateServices(techSel.value, isGuide);
+    updateTechInfo(techSel.value, isGuide);
+    const t = getFn(techSel.value);
     const title = document.getElementById('formTitle');
     if (title && t) title.textContent = `预约 ${t.name}`;
   });
@@ -513,9 +579,10 @@ function initBooking() {
   }
 }
 
-function updateServices(id) {
+function updateServices(id, isGuide) {
   const sel = document.getElementById('bookService');
-  const t = getTechnicianById(id);
+  const getFn = isGuide ? getGuideById : getTechnicianById;
+  const t = getFn(id);
   sel.innerHTML = '<option value="">请选择</option>';
   if (!t) return;
   t.services.forEach(s => {
@@ -526,14 +593,20 @@ function updateServices(id) {
   });
 }
 
-function updateTechInfo(id) {
+function updateTechInfo(id, isGuide) {
   const el = document.getElementById('bookTechInfo');
-  const t = getTechnicianById(id);
+  const getFn = isGuide ? getGuideById : getTechnicianById;
+  const t = getFn(id);
   if (!el || !t) return;
+  let extra = '';
+  if (isGuide && t.languages) {
+    extra = `<span style="color:var(--text-muted);font-size:0.78rem;">🗣️ ${t.languages.join(' · ')}</span>`;
+  }
   el.innerHTML = `
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
       ${t.specialties.map(s => `<span style="background:rgba(139,92,246,0.15);color:var(--primary-light);padding:3px 10px;border-radius:999px;font-size:0.78rem;">${s}</span>`).join('')}
       <span style="color:var(--text-muted);font-size:0.78rem;">⭐${t.rating} · 服务: ${t.serviceRange}</span>
+      ${extra}
     </div>
   `;
 }
@@ -547,19 +620,23 @@ function submitBooking(e) {
   const name = document.getElementById('bookName').value;
   const phone = document.getElementById('bookPhone').value;
   const addr = document.getElementById('bookAddress')?.value || '';
+  const mode = new URLSearchParams(window.location.search).get('mode') || 'tech';
+  const isGuide = mode === 'guide';
+  const getFn = isGuide ? getGuideById : getTechnicianById;
 
   if (!techId || !sv || !date || !time || !name || !phone) {
     alert('请填写所有必填信息');
     return;
   }
 
-  const t = getTechnicianById(techId);
+  const t = getFn(techId);
   const [sn, sp] = sv.split('|');
 
   sessionStorage.setItem('bookingInfo', JSON.stringify({
     techName: t ? t.name : '',
     serviceName: sn, servicePrice: sp,
-    date, time, customerName: name, customerPhone: phone, address: addr
+    date, time, customerName: name, customerPhone: phone, address: addr,
+    isGuide: isGuide
   }));
   window.location.href = 'booking-success.html';
 }
@@ -580,10 +657,13 @@ function initSuccess() {
     return;
   }
   const b = JSON.parse(data);
+  const isGuide = b.isGuide;
+  const roleIcon = isGuide ? '🤝' : '💆';
+  const roleLabel = isGuide ? '地陪' : '技师';
   const msg = [
-    `🦀 ${(SITE_CONFIG && SITE_CONFIG.siteName) || '按按摩'} - 新预约`,
+    `${isGuide ? '🤝' : '🦀'} ${(SITE_CONFIG && SITE_CONFIG.siteName) || '按按摩'} - 新预约`,
     ``,
-    `💆 技师：${b.techName}`,
+    `${roleIcon} ${roleLabel}：${b.techName}`,
     `📋 服务：${b.serviceName} (${b.servicePrice})`,
     `📅 时间：${b.date} ${b.time}`,
     `👤 客户：${b.customerName}`,
@@ -592,7 +672,7 @@ function initSuccess() {
   ].filter(Boolean).join('\n');
 
   box.innerHTML = [
-    `<p><strong>💆 技师：</strong>${b.techName}</p>`,
+    `<p><strong>${roleIcon} ${roleLabel}：</strong>${b.techName}</p>`,
     `<p><strong>📋 服务：</strong>${b.serviceName} (${b.servicePrice})</p>`,
     `<p><strong>📅 时间：</strong>${b.date} ${b.time}</p>`,
     `<p><strong>👤 客户：</strong>${b.customerName}</p>`,

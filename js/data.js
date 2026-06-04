@@ -284,3 +284,152 @@ function getTechniciansByArea(area) {
   if (!area || area === "all") return technicians;
   return technicians.filter(t => t.area === area);
 }
+
+// ============================================
+//  🤝 地陪数据
+// ============================================
+
+const guides = [
+  {
+    id: 1,
+    name: "阿强",
+    age: 28,
+    area: "吉隆坡",
+    coverBg: "linear-gradient(135deg, #43e97b, #38f9d7)",
+    specialties: ["美食探店", "夜生活", "购物陪同"],
+    languages: ["中文", "英文", "粤语"],
+    rating: 4.9,
+    reviewCount: 67,
+    price: "RM 50/小时",
+    phone: "601114155848",
+    available: true,
+    experience: "5年",
+    height: "175cm",
+    weight: "",
+    bust: "",
+    origin: "马来西亚",
+    bio: "土生土长吉隆坡人，熟悉KL每个角落。从隐藏版美食到地道夜生活，带你体验最真实的大马。兼职摄影师，还能帮你拍美美的照片📸",
+    serviceRange: "吉隆坡 / 雪兰莪",
+    photos: [],
+    videoUrl: "",
+    services: [
+      { name: "美食探店（2小时）", price: "RM 100" },
+      { name: "夜店陪玩（3小时）", price: "RM 150" },
+      { name: "全天导游/翻译（8小时）", price: "RM 350" },
+      { name: "拍照跟拍（1小时）", price: "RM 80" }
+    ],
+    reviews: [
+      { user: "小李", rating: 5, text: "阿强带我们去的榴莲档绝了！" },
+      { user: "Jack", rating: 5, text: "英文很溜，帮我翻译谈判省了好多钱" }
+    ]
+  },
+  {
+    id: 2,
+    name: "小美",
+    age: 24,
+    area: "Puchong",
+    coverBg: "linear-gradient(135deg, #f093fb, #f5576c)",
+    specialties: ["购物向导", "美妆探店", "拍照打卡"],
+    languages: ["中文", "英文", "闽南语"],
+    rating: 4.7,
+    reviewCount: 43,
+    price: "RM 45/小时",
+    phone: "601114155848",
+    available: true,
+    experience: "3年",
+    height: "160cm",
+    weight: "",
+    bust: "",
+    origin: "马来西亚",
+    bio: "女生专属地陪！带你去KL最好逛的商场、最火的网红打卡点。懂美妆懂穿搭，还能帮你做造型参谋🛍️",
+    serviceRange: "Puchong / 吉隆坡",
+    photos: [],
+    videoUrl: "",
+    services: [
+      { name: "购物向导（2小时）", price: "RM 90" },
+      { name: "网红店打卡（3小时）", price: "RM 130" },
+      { name: "全天陪同（8小时）", price: "RM 320" }
+    ],
+    reviews: [
+      { user: "小婷", rating: 5, text: "小美推荐的护肤品店超好买" },
+      { user: "Yuna", rating: 4, text: "拍照技术很好，出片率很高" }
+    ]
+  },
+  {
+    id: 3,
+    name: "阿Ben",
+    age: 32,
+    area: "Cheras",
+    coverBg: "linear-gradient(135deg, #4facfe, #00f2fe)",
+    specialties: ["历史讲解", "夜市美食", "文化体验"],
+    languages: ["中文", "英文", "马来文"],
+    rating: 4.8,
+    reviewCount: 89,
+    price: "RM 60/小时",
+    phone: "601114155848",
+    available: true,
+    experience: "8年",
+    height: "170cm",
+    weight: "",
+    bust: "",
+    origin: "马来西亚",
+    bio: "持证导游，对马来西亚历史文化了如指掌。带你逛清真寺、唐人街、印度庙，讲解背后的故事。晚上还能带你去最道地的夜市吃不停🍢",
+    serviceRange: "Cheras / 吉隆坡 / 马六甲",
+    photos: [],
+    videoUrl: "",
+    services: [
+      { name: "市区文化导览（3小时）", price: "RM 180" },
+      { name: "夜市美食之旅（2小时）", price: "RM 120" },
+      { name: "马六甲一日游", price: "RM 500" }
+    ],
+    reviews: [
+      { user: "旅游达人老王", rating: 5, text: "Ben的知识储备很丰富，讲解生动" },
+      { user: "Suki", rating: 5, text: "带我们吃的沙爹太好吃了" },
+      { user: "强哥", rating: 4, text: "马六甲一日游安排得很合理" }
+    ]
+  },
+  {
+    id: 4,
+    name: "Coco",
+    age: 26,
+    area: "Subang",
+    coverBg: "linear-gradient(135deg, #a18cd1, #fbc2eb)",
+    specialties: ["夜店向导", "酒吧探店", "交友陪同"],
+    languages: ["中文", "英文", "粤语", "日语"],
+    rating: 4.6,
+    reviewCount: 55,
+    price: "RM 55/小时",
+    phone: "601114155848",
+    available: true,
+    experience: "4年",
+    height: "163cm",
+    weight: "",
+    bust: "",
+    origin: "马来西亚",
+    bio: "KL夜生活达人！知道哪家夜店音乐最嗨、哪家酒吧调酒最棒。一个人来KL也不无聊，带你玩到尽兴🎉",
+    serviceRange: "Subang / 吉隆坡 / Bangsar",
+    photos: [],
+    videoUrl: "",
+    services: [
+      { name: "夜店之旅（3小时）", price: "RM 165" },
+      { name: "酒吧探店（2小时）", price: "RM 110" },
+      { name: "夜间陪同（4小时）", price: "RM 220" }
+    ],
+    reviews: [
+      { user: "夜店小王", rating: 5, text: "Coco带我去的夜店气氛超好" },
+      { user: "Lucas", rating: 5, text: "日语也会说，太厉害了" }
+    ]
+  }
+];
+
+// ===== 地陪工具函数 =====
+function getGuideById(id) {
+  return guides.find(g => g.id === parseInt(id));
+}
+function getAllGuideAreas() {
+  return [...new Set(guides.map(g => g.area))];
+}
+function getGuidesByArea(area) {
+  if (!area || area === "all") return guides;
+  return guides.filter(g => g.area === area);
+}
