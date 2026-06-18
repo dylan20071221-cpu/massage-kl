@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>在线咨询 - 大马顶级会所</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/chat.css" />
+</head>
+<body>
+  <div class="chat-app">
+    <!-- 聊天头部 -->
+    <div class="chat-header">
+      <button class="chat-back" onclick="history.back()">←</button>
+      <div class="chat-header-info">
+        <div class="chat-avatar">🦀</div>
+        <div>
+          <div class="chat-header-name">客户服务</div>
+          <div class="chat-header-status" id="headerStatus">🟢 在线</div>
+        </div>
+      </div>
+      <div class="chat-header-actions">
+        <span onclick="window.location.href='index.html'" style="cursor:pointer;font-size:1.1rem;">🏠</span>
+      </div>
+    </div>
+
+    <!-- 消息区域 -->
+    <div class="chat-messages" id="chatMessages">
+      <!-- 欢迎消息（由 JS 渲染） -->
+    </div>
+
+    <!-- 快捷回复 -->
+    <div class="chat-quick-replies" id="quickReplies">
+      <button class="quick-btn" data-msg="请问现在有哪几位技师可以约？">👩 技师查询</button>
+      <button class="quick-btn" data-msg="我想预约，怎么操作？">📅 如何预约</button>
+      <button class="quick-btn" data-msg="可以上门服务吗？">🚗 上门服务</button>
+      <button class="quick-btn" data-msg="价格怎么算的？">💰 价格咨询</button>
+    </div>
+
+    <!-- 输入栏 -->
+    <div class="chat-input-bar">
+      <input type="text" class="chat-input" id="chatInput" placeholder="输入消息..." maxlength="500" />
+      <button class="chat-send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/chat.js"></script>
+</body>
+</html>
