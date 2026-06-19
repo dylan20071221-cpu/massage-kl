@@ -48,6 +48,13 @@ function switchTab(tab) {
 let umamiConfig = null;
 
 function loadAnalytics() {
+  // 如果还没有配置，自动填入默认值
+  if (!localStorage.getItem('umamiConfig')) {
+    localStorage.setItem('umamiConfig', JSON.stringify({
+      url: 'https://d0bde631cd377f.lhr.life',
+      siteId: '47384b7d-4d25-4293-9f69-c3b1e0e696e6'
+    }));
+  }
   // 从存储读取配置
   const saved = localStorage.getItem('umamiConfig');
   const container = document.getElementById('analyticsIframeContainer');
