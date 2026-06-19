@@ -32,11 +32,87 @@ let currentTab = 'config';
 // ===== Tab =====
 function switchTab(tab) {
   currentTab = tab;
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', (i===0&&tab==='config')||(i===1&&tab==='techs')));
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const tabNames = ['config', 'techs', 'analytics'];
+    t.classList.toggle('active', tabNames[i] === tab);
+  });
   document.getElementById('tab-config').classList.toggle('active', tab === 'config');
   document.getElementById('tab-techs').classList.toggle('active', tab === 'techs');
+  document.getElementById('tab-analytics').classList.toggle('active', tab === 'analytics');
   if (tab === 'config') loadConfig();
   if (tab === 'techs') renderTechs();
+  if (tab === 'analytics') loadAnalytics();
+}
+
+// ===== Analytics / Umami 看板 =====
+let umamiConfig = null;
+
+function loadAnalytics() {
+  // 从存储读取配置
+  const saved = localStorage.getItem('umamiConfig');
+  const container = document.getElementById('analyticsIframeContainer');
+  const status = document.getElementById('analytics-status');
+
+  if (!saved) {
+    container.innerHTML = `
+      <div style="font-size:3rem;">📊</div>
+      <div style="color:var(--admin-muted);text-align:center;font-size:0.9rem;max-width:400px;">
+        <p style="margin-bottom:12px;">还没有配置 Umami 看板</p>
+        <p style="margin-bottom:4px;">部署 Umami 后在后台创建站点，获得：</p>
+        <p style="margin-bottom:4px;">① Umami 部署地址（如：https://xxx.vercel.app）</p>
+        <p style="margin-bottom:8px;">② Website ID（站点标识）</p>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+          <input type="text" id="umami-url" placeholder="Umami 地址" style="padding:10px;border-radius:8px;border:1px solid var(--admin-border);background:var(--admin-input);color:white;font-size:0.85rem;">
+          <input type="text" id="umami-site-id" placeholder="Website ID" style="padding:10px;border-radius:8px;border:1px solid var(--admin-border);background:var(--admin-input);color:white;font-size:0.85rem;">
+          <button onclick="saveUmamiConfig()" style="padding:10px;border:none;border-radius:8px;background:var(--admin-primary);color:white;cursor:pointer;font-size:0.85rem;">💾 保存并加载</button>
+        </div>
+      </div>
+    `;
+    if (status) status.textContent = '⚙️ 待配置';
+    return;
+  }
+
+  try {
+    umamiConfig = JSON.parse(saved);
+    if (status) status.textContent = '🟢 已连接';
+    loadUmamiDashboard(umamiConfig);
+  } catch(e) {
+    container.innerHTML = '<div style="color:var(--admin-danger);">配置读取失败</div>';
+  }
+}
+
+function saveUmamiConfig() {
+  const url = document.getElementById('umami-url')?.value.trim();
+  const siteId = document.getElementById('umami-site-id')?.value.trim();
+  if (!url || !siteId) {
+    alert('请填写 Umami 地址和 Website ID');
+    return;
+  }
+  const config = { url, siteId };
+  localStorage.setItem('umamiConfig', JSON.stringify(config));
+  umamiConfig = config;
+  const status = document.getElementById('analytics-status');
+  if (status) status.textContent = '🟢 已连接';
+  loadUmamiDashboard(config);
+}
+
+function loadUmamiDashboard(config) {
+  const container = document.getElementById('analyticsIframeContainer');
+  // 替换 analytics.js 中的占位符
+  const umamiUrl = config.url.replace(/\/$/, '');
+  container.innerHTML = `
+    <div style="width:100%;display:flex;gap:8px;margin-bottom:12px;">
+      <button onclick="resetUmamiConfig()" style="padding:6px 14px;border:1px solid var(--admin-border);border-radius:6px;background:transparent;color:var(--admin-muted);cursor:pointer;font-size:0.8rem;">⚙️ 重新配置</button>
+      <a href="${umamiUrl}" target="_blank" style="padding:6px 14px;border:1px solid var(--admin-border);border-radius:6px;background:transparent;color:var(--admin-primary);cursor:pointer;font-size:0.8rem;text-decoration:none;">🔗 打开 Umami</a>
+    </div>
+    <iframe src="${umamiUrl}/share/${config.siteId}" style="width:100%;min-height:600px;border:none;border-radius:8px;" allow="cross-origin-isolated"></iframe>
+  `;
+}
+
+function resetUmamiConfig() {
+  localStorage.removeItem('umamiConfig');
+  umamiConfig = null;
+  loadAnalytics();
 }
 
 // ===== Config =====

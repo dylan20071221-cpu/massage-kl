@@ -24,6 +24,7 @@
   <div class="tabs">
     <button class="tab active" onclick="switchTab('config')">⚙️ 网站设置</button>
     <button class="tab" onclick="switchTab('techs')">👩‍⚕️ 技师管理</button>
+    <button class="tab" onclick="switchTab('analytics')">📊 实时流量</button>
   </div>
 
   <!-- Tab: Config -->
@@ -64,10 +65,26 @@
     <div class="tech-grid" id="techList"></div>
   </div>
 
+  <!-- Tab: Analytics -->
+  <div class="tab-content" id="tab-analytics">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h2 style="font-size:1.2rem;">📊 实时流量</h2>
+      <span id="analytics-status" style="font-size:0.8rem;color:var(--admin-muted);">⏳ 加载中...</span>
+    </div>
+    <div id="analyticsIframeContainer" style="width:100%;min-height:500px;background:var(--admin-card);border-radius:12px;border:1px solid var(--admin-border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:40px;">
+      <div style="font-size:3rem;">📊</div>
+      <div style="color:var(--admin-muted);text-align:center;font-size:0.9rem;">
+        <p>Umami 数据库配置好后即可查看实时流量</p>
+        <p style="margin-top:8px;">请先在 Umami 后台创建站点并获取 Website ID</p>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script src="js/data.js"></script>
   <script src="js/admin.js"></script>
   <script src="js/pwa.js"></script>
+  <script src="js/analytics.js"></script>
 </body>
 </html>
