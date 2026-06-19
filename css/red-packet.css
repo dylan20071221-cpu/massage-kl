@@ -1,0 +1,487 @@
+/* ===== 红包局专属 ===== */
+.rp-status-bar {
+  padding: 12px 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  z-index: 10;
+}
+.rp-status-bar .logo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #FFD700;
+}
+.rp-status-icons {
+  display: flex;
+  gap: 16px;
+  font-size: 1.1rem;
+}
+
+/* 红包局主题色调 */
+:root {
+  --rp-primary: #FF2D55;
+  --rp-accent: #FFD700;
+  --rp-glow: rgba(255,45,85,0.3);
+}
+
+/* 顶部红包局专属导航 */
+.rp-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 20px;
+  gap: 8px;
+}
+.rp-nav-item {
+  padding: 6px 18px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+}
+.rp-nav-item.active {
+  background: linear-gradient(135deg, #FF2D55, #FF6B35);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255,45,85,0.3);
+  border-color: transparent;
+}
+.rp-nav-item:not(.active):hover {
+  color: var(--text-light);
+  border-color: rgba(255,255,255,0.1);
+}
+
+/* 卡片 — 陪酒风格 */
+.rp-card-media {
+  background: linear-gradient(135deg, #1a0a2e, #2d1b4e);
+}
+.rp-card-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: linear-gradient(135deg, #FF2D55, #FF6B35);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  z-index: 4;
+  box-shadow: 0 2px 8px rgba(255,45,85,0.4);
+}
+.rp-card-price-tag {
+  position: absolute;
+  bottom: 140px;
+  right: 16px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #FFD700;
+  z-index: 4;
+}
+.rp-card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 20px 20px;
+  z-index: 3;
+}
+.rp-card-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.rp-card-name span {
+  font-weight: 400;
+  font-size: 1rem;
+  opacity: 0.7;
+}
+.rp-card-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.rp-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 4px;
+}
+.rp-card-tag {
+  font-size: 0.72rem;
+  background: rgba(255,45,85,0.2);
+  backdrop-filter: blur(4px);
+  padding: 3px 10px;
+  border-radius: 999px;
+  color: #FF8A8A;
+}
+.rp-card-desc {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 底部操作栏 — 红包局风格 */
+.rp-action-bar {
+  padding: 10px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  z-index: 10;
+}
+.rp-action-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.rp-action-btn:active { transform: scale(0.9); }
+.rp-action-btn:hover { transform: scale(1.05); }
+
+.rp-action-btn.pass {
+  background: #1A1230;
+  color: #EF4444;
+  border: 2px solid rgba(239,68,68,0.3);
+}
+.rp-action-btn.invite {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #FF2D55, #FF6B35);
+  color: white;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 20px rgba(255,45,85,0.4);
+}
+.rp-action-btn.like {
+  background: #1A1230;
+  color: #FFD700;
+  border: 2px solid rgba(255,215,0,0.3);
+}
+.rp-action-btn.info {
+  width: 48px;
+  height: 48px;
+  background: #1A1230;
+  color: var(--text-light);
+  border: 2px solid rgba(255,255,255,0.1);
+  font-size: 1.1rem;
+}
+.rp-action-label {
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ===== 列表模式 ===== */
+.rp-list-view {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 16px 16px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.rp-list-view.show { display: block; }
+
+.rp-list-item {
+  display: flex;
+  gap: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rp-list-item:active { transform: scale(0.98); }
+
+.rp-list-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.rp-list-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rp-list-body {
+  flex: 1;
+  min-width: 0;
+}
+.rp-list-name {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+.rp-list-name span {
+  font-weight: 400;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+.rp-list-meta {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+.rp-list-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.rp-list-tag {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255,45,85,0.12);
+  color: #FF8A8A;
+}
+.rp-list-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.rp-list-price {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #FFD700;
+}
+.rp-list-rating {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ===== 切换视图按钮 ===== */
+.rp-view-toggle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* ===== 弹窗 ===== */
+.rp-modal {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 200;
+  overflow-y: auto;
+  animation: fadeIn 0.25s;
+}
+.rp-modal-header {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.rp-modal-header h2 { font-size: 1.2rem; font-weight: 700; }
+.rp-modal-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-light);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rp-detail-cover {
+  width: 100%;
+  height: 45vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  overflow: hidden;
+}
+.rp-detail-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 12px;
+}
+.rp-detail-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--bg) 0%, transparent 50%);
+}
+.rp-detail-body {
+  padding: 20px;
+  margin-top: -40px;
+  position: relative;
+  background: var(--bg);
+  border-radius: 28px 28px 0 0;
+}
+.rp-detail-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.rp-detail-name small {
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--text-light);
+}
+.rp-detail-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.rp-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.rp-detail-tag {
+  background: rgba(255,45,85,0.15);
+  color: #FF8A8A;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+}
+.rp-detail-section {
+  margin-bottom: 20px;
+}
+.rp-detail-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text-light);
+}
+.rp-detail-bio {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.85);
+  background: var(--surface);
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.rp-invite-btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #FF2D55, #FF6B35);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font);
+  margin: 24px 0 40px;
+  transition: opacity 0.2s;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(255,45,85,0.3);
+}
+.rp-invite-btn:active { opacity: 0.85; }
+
+.rp-price-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+.rp-price-name { font-size: 0.92rem; }
+.rp-price-amount { font-weight: 700; color: #FFD700; }
+
+/* ===== 无更多 ===== */
+.rp-no-more {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+  text-align: center;
+  padding: 40px;
+}
+.rp-no-more .emoji { font-size: 4rem; margin-bottom: 16px; }
+.rp-no-more h3 { font-size: 1.3rem; color: var(--text); margin-bottom: 8px; }
+.rp-no-more p { font-size: 0.9rem; margin-bottom: 24px; }
+.rp-no-more .btn-reset {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #FF2D55, #FF6B35);
+  border: none;
+  border-radius: 999px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: var(--font);
+  box-shadow: 0 4px 15px rgba(255,45,85,0.3);
+}
+
+/* Toast */
+.rp-toast {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 999;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.rp-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 480px) {
+  .rp-card-name { font-size: 1.3rem; }
+  .rp-action-btn { width: 48px; height: 48px; font-size: 1.2rem; }
+  .rp-action-btn.invite { width: 56px; height: 56px; }
+  .rp-action-bar { gap: 14px; padding: 8px 16px 16px; }
+}

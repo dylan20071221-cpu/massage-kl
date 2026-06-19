@@ -5,8 +5,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>大马顶级会所，顶级水疗</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0F0A1A" />
   <style>
     body { background: var(--bg); color: var(--text); }
+    .form-input.error, .form-select.error { border-color: #EF4444 !important; }
+    .form-input.valid, .form-select.valid { border-color: #22C55E !important; }
+    .form-error-msg { font-size:0.78rem; color:#EF4444; margin-top:3px; display:none; }
+    .form-error-msg.show { display:block; }
+    .form-submit:disabled { opacity:0.5; cursor:not-allowed; }
+    .form-submit .spinner { display:none; }
+    .form-submit.loading .spinner { display:inline-block; }
+    .form-submit.loading .btn-text { display:none; }
   </style>
 </head>
 <body>
@@ -46,21 +58,124 @@
       </div>
       <div class="form-group">
         <label class="form-label">你的姓名</label>
-        <input type="text" class="form-input" id="bookName" placeholder="请输入姓名" required />
+        <input type="text" class="form-input" id="bookName" placeholder="请输入姓名" required minlength="2" oninput="validateField(this, 2)" />
+        <div class="form-error-msg" id="err-bookName">姓名至少 2 个字符</div>
       </div>
       <div class="form-group">
         <label class="form-label">WhatsApp 号码</label>
-        <input type="tel" class="form-input" id="bookPhone" placeholder="012-3456789" required />
+        <input type="tel" class="form-input" id="bookPhone" placeholder="012-3456789" required pattern="[0-9\-\+\s]{8,15}" oninput="validatePhone(this)" />
         <div class="form-helper">用于联系确认预约</div>
+        <div class="form-error-msg" id="err-bookPhone">请输入有效的电话号码（8-15位数字）</div>
       </div>
       <div class="form-group">
         <label class="form-label">上门地址（选填）</label>
         <textarea class="form-textarea" id="bookAddress" placeholder="区域、街道、门牌…"></textarea>
       </div>
-      <button type="submit" class="form-submit">💬 提交预约</button>
+      <button type="submit" class="form-submit" id="submitBtn">
+      <span class="btn-text">💬 提交预约</span>
+      <span class="spinner">⏳</span>
+    </button>
     </form>
   </div>
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/pwa.js"></script>
+  <script>
+  // ===== 表单校验 =====
+  function validateField(input, minLen) {
+    const err = document.getElementById('err-' + input.id);
+    if (input.value.trim().length >= (minLen || 1)) {
+      input.classList.remove('error');
+      input.classList.add('valid');
+      if (err) err.classList.remove('show');
+      return true;
+    } else {
+      input.classList.remove('valid');
+      if (input.value.trim().length > 0) {
+        input.classList.add('error');
+        if (err) err.classList.add('show');
+      } else {
+        input.classList.remove('error');
+        if (err) err.classList.remove('show');
+      }
+      return false;
+    }
+  }
+
+  function validatePhone(input) {
+    const err = document.getElementById('err-' + input.id);
+    const val = input.value.replace(/[\s\-\+]/g, '');
+    if (val.length >= 8 && val.length <= 15 && /^\d+$/.test(val)) {
+      input.classList.remove('error');
+      input.classList.add('valid');
+      if (err) err.classList.remove('show');
+      return true;
+    } else {
+      input.classList.remove('valid');
+      if (val.length > 0) {
+        input.classList.add('error');
+        if (err) err.classList.add('show');
+      } else {
+        input.classList.remove('error');
+        if (err) err.classList.remove('show');
+      }
+      return false;
+    }
+  }
+
+  // ===== 重写 submitBooking 增加 loading 状态 =====
+  const origSubmit = window.submitBooking;
+  window.submitBooking = function(e) {
+    e.preventDefault();
+
+    // 校验所有必填字段
+    const nameOk = validateField(document.getElementById('bookName'), 2);
+    const phoneOk = validatePhone(document.getElementById('bookPhone'));
+
+    const techId = document.getElementById('bookTech').value;
+    const sv = document.getElementById('bookService').value;
+    const date = document.getElementById('bookDate').value;
+    const time = document.getElementById('bookTime').value;
+
+    if (!techId || !sv || !date || !time || !nameOk || !phoneOk) {
+      // 高亮未选中的下拉框
+      ['bookTech','bookService','bookTime','bookDate'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value) el.classList.add('error');
+        else el.classList.remove('error');
+      });
+      alert('请填写所有必填信息');
+      return;
+    }
+
+    // Loading 状态
+    const btn = document.getElementById('submitBtn');
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    // 模拟短暂的延迟让用户看到 loading
+    setTimeout(() => {
+      // 调用原逻辑
+      const params = new URLSearchParams(window.location.search);
+      const mode = params.get('mode') || 'tech';
+      const isGuide = mode === 'guide';
+      const getFn = isGuide ? getGuideById : getTechnicianById;
+
+      const t = getFn(techId);
+      const [sn, sp] = sv.split('|');
+
+      sessionStorage.setItem('bookingInfo', JSON.stringify({
+        techName: t ? t.name : '',
+        serviceName: sn, servicePrice: sp,
+        date, time,
+        customerName: document.getElementById('bookName').value.trim(),
+        customerPhone: document.getElementById('bookPhone').value.trim(),
+        address: document.getElementById('bookAddress')?.value || '',
+        isGuide: isGuide
+      }));
+      window.location.href = 'booking-success.html';
+    }, 600);
+  };
+  </script>
 </body>
 </html>

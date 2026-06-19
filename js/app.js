@@ -383,7 +383,7 @@ function renderGrid(list) {
     return `
     <div class="grid-card">
       <div class="grid-card-cover" onclick="window.location.href='technician.html?id=${t.id}${modeSuffix}'" style="background:${hasGridPhoto ? '#111' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};">
-        ${hasGridPhoto ? '<img src="'+gridMainPhoto+'" style="width:100%;height:100%;object-fit:contain;padding:8px;" />' : (isGuide ? '🤝' : '🦀')}
+        ${hasGridPhoto ? '<img src="'+gridMainPhoto+'" loading="lazy" style="width:100%;height:100%;object-fit:contain;padding:8px;" />' : (isGuide ? '🤝' : '🦀')}
         ${allGridPhotos.length > 1 ? '<div class="grid-photo-nav"><div class="grid-photo-arrow left" onclick="event.stopPropagation();gridPhotoSwitch('+t.id+',-1)">‹</div><div class="grid-photo-arrow right" onclick="event.stopPropagation();gridPhotoSwitch('+t.id+',1)">›</div></div>' : ''}
       </div>
       <div class="grid-card-body" onclick="window.location.href='technician.html?id=${t.id}${modeSuffix}'">
@@ -468,12 +468,12 @@ function initDetail() {
   const mainPhoto = photos[0] || '';
   container.innerHTML = `
     <div class="detail-cover" id="detailCover" style="background:${hasPhotos ? '#111' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};overflow:hidden;">
-      ${hasPhotos ? '<img src="'+mainPhoto+'" id="detailCoverImg" style="width:100%;height:100%;object-fit:contain;padding:10px;" />' : (isGuide ? '<span style="font-size:5rem;">🤝</span>' : '<span style="font-size:5rem;">🦀</span>')}
+      ${hasPhotos ? '<img src="'+mainPhoto+'" id="detailCoverImg" loading="lazy" style="width:100%;height:100%;object-fit:contain;padding:10px;" />' : (isGuide ? '<span style="font-size:5rem;">🤝</span>' : '<span style="font-size:5rem;">🦀</span>')}
       <div class="detail-cover-overlay"></div>
       <button class="detail-close" onclick="history.back()">←</button>
       ${hasPhotos && photos.length > 1 ? '<div class="detail-photo-dots">'+photos.map((p,i) => '<span class="dot '+(i===0?'active':'')+'" onclick="switchDetailPhoto('+t.id+','+i+')"></span>').join('')+'</div>' : ''}
     </div>
-    ${hasPhotos ? '<div class="detail-thumbs">'+photos.map((p,i) => '<img src="'+p+'" class="detail-thumb'+(i===0?' active':'')+'" onclick="switchDetailPhoto('+t.id+','+i+')" />').join('')+'</div>' : ''}
+    ${hasPhotos ? '<div class="detail-thumbs">'+photos.map((p,i) => '<img src="'+p+'" loading="lazy" class="detail-thumb'+(i===0?' active':'')+'" onclick="switchDetailPhoto('+t.id+','+i+')" />').join('')+'</div>' : ''}
     <div class="detail-body">
       <div class="detail-name">${t.name} <small>${t.age}岁</small></div>
       <div class="detail-meta">
