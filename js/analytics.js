@@ -2,7 +2,7 @@
  * 🦀 按按摩 - Umami Analytics 跟踪脚本
  */
 (function() {
-  const UMAMI_URL = 'https://f7a5e3d3736c72.lhr.life';
+  const UMAMI_URL = 'https://d0bde631cd377f.lhr.life';
   const WEBSITE_ID = '47384b7d-4d25-4293-9f69-c3b1e0e696e6';
 
   if (!UMAMI_URL || UMAMI_URL.includes('PLACEHOLDER')) return;
