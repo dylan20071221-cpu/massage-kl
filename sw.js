@@ -7,9 +7,23 @@ const CACHE_NAME = 'massage-kl-v1';
 const PRECACHE_URLS = [
   '/',
   '/index.html',
+  '/explore.html',
+  '/chat.html',
+  '/book.html',
+  '/booking-success.html',
+  '/technician.html',
+  '/red-packet.html',
+  '/admin.html',
   '/css/style.css',
+  '/css/chat.css',
+  '/css/red-packet.css',
+  '/css/admin.css',
   '/js/data.js',
   '/js/app.js',
+  '/js/chat.js',
+  '/js/red-packet.js',
+  '/js/admin.js',
+  '/js/pwa.js',
   '/manifest.json'
 ];
 
