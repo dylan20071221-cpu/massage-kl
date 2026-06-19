@@ -156,12 +156,7 @@
     // 模拟短暂的延迟让用户看到 loading
     setTimeout(() => {
       // 调用原逻辑
-      const params = new URLSearchParams(window.location.search);
-      const mode = params.get('mode') || 'tech';
-      const isGuide = mode === 'guide';
-      const getFn = isGuide ? getGuideById : getTechnicianById;
-
-      const t = getFn(techId);
+      const t = getTechnicianById(techId);
       const [sn, sp] = sv.split('|');
 
       sessionStorage.setItem('bookingInfo', JSON.stringify({
@@ -170,8 +165,7 @@
         date, time,
         customerName: document.getElementById('bookName').value.trim(),
         customerPhone: document.getElementById('bookPhone').value.trim(),
-        address: document.getElementById('bookAddress')?.value || '',
-        isGuide: isGuide
+        address: document.getElementById('bookAddress')?.value || ''
       }));
       window.location.href = 'booking-success.html';
     }, 600);

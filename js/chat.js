@@ -10,8 +10,6 @@ const FAQ = {
   '技师|预约|有谁|可以约|推荐': {
     reply: '我们目前有以下技师可供预约：\n\n💆 按摩技师\n' +
       (technicians.length ? technicians.map(t => `  • #${t.id} ${t.name}（${t.age}岁）📍${t.area} 💰${t.price}`).join('\n') : '  • 暂无数据') +
-      '\n\n🤝 地陪服务\n' +
-      (typeof guides !== 'undefined' && guides.length ? guides.map(g => `  • #${g.id} ${g.name}（${g.age}岁）📍${g.area}`).join('\n') : '  • 暂无数据') +
       '\n\n📱 点击下方按钮直接通过 WhatsApp 咨询 👇',
     action: 'contact'
   },
@@ -42,12 +40,6 @@ const FAQ = {
       (SITE_CONFIG && SITE_CONFIG.areas ? SITE_CONFIG.areas.map(a => `  • ${a}`).join('\n') : '') +
       '\n\n具体地址预约后客服会发给您。也可以安排上门服务~',
     action: ''
-  },
-  '地陪|guide|导游|陪玩': {
-    reply: '🤝 地陪服务：\n\n本地向导，带你吃喝玩乐，逛街购物，语言翻译一应俱全！\n\n' +
-      (typeof guides !== 'undefined' && guides.length ? guides.map(g => `  • #${g.id} ${g.name}（${g.age}岁）📍${g.area} 🗣️ ${(g.languages || []).join('/')}`).join('\n') : '  • 暂无地陪数据') +
-      '\n\n切换到 🤝 地陪 模式浏览详情 👆',
-    action: 'contact'
   }
 };
 
