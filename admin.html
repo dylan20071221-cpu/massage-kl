@@ -10,12 +10,14 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#0F0A1A" />
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
   <div class="admin-header">
     <h1>🦀 <span>懂懂</span> 的管理后台</h1>
     <div class="header-actions">
+      <span id="supabaseStatus" style="font-size:0.75rem;color:var(--admin-muted);padding:6px 10px;border:1px solid var(--admin-border);border-radius:6px;">⚪ 加载中...</span>
       <button class="btn btn-outline" onclick="previewData()">👁 预览数据</button>
       <button class="btn btn-success" onclick="exportData()">📥 导出 data.js</button>
     </div>
@@ -25,6 +27,7 @@
     <button class="tab active" onclick="switchTab('config')">⚙️ 网站设置</button>
     <button class="tab" onclick="switchTab('techs')">👩‍⚕️ 技师管理</button>
     <button class="tab" onclick="switchTab('analytics')">📊 实时流量</button>
+    <button class="tab" onclick="switchTab('database')">☁️ 数据库设置</button>
   </div>
 
   <!-- Tab: Config -->
@@ -53,6 +56,7 @@
     </div>
     <div style="margin-top:12px;">
       <button class="btn btn-primary" onclick="saveConfig()">💾 保存设置</button>
+      <span style="font-size:0.75rem;color:var(--admin-muted);margin-left:8px;">保存后所有人实时看到</span>
     </div>
   </div>
 
@@ -61,6 +65,7 @@
     <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center;">
       <button class="btn btn-primary" onclick="addTechnician()">➕ 添加新技师</button>
       <span style="font-size:0.8rem;color:var(--admin-muted);" id="techCount"></span>
+      <span style="font-size:0.75rem;color:var(--admin-muted);margin-left:4px;">编辑后点「保存到数据库」才生效</span>
     </div>
     <div class="tech-grid" id="techList"></div>
   </div>
@@ -78,6 +83,11 @@
         <p style="margin-top:8px;">请先在 Umami 后台创建站点并获取 Website ID</p>
       </div>
     </div>
+  </div>
+
+  <!-- Tab: Database -->
+  <div class="tab-content" id="tab-database">
+    <!-- JS 动态渲染 -->
   </div>
 
   <div class="toast" id="toast"></div>

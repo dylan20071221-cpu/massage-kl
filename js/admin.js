@@ -1,143 +1,200 @@
-// ===== Data =====
-// 优先从 data.js 读取，没有则用默认值
-let data = (typeof SITE_CONFIG !== 'undefined') ? {
-  siteName: SITE_CONFIG.siteName || "大马顶级会所，顶级水疗",
-  tagline: SITE_CONFIG.tagline || "大马正规按摩 · 上门预约",
-  whatsappNumber: SITE_CONFIG.whatsappNumber || "601114155848",
-  telegram: SITE_CONFIG.telegram || "",
-  areas: SITE_CONFIG.areas || ["吉隆坡", "Cheras", "Puchong", "Kajang", "Setapak", "Subang", "Petaling Jaya", "Ampang"],
-  technicians: (typeof technicians !== 'undefined') ? JSON.parse(JSON.stringify(technicians)) : []
-} : {
-  siteName: "大马顶级会所，顶级水疗",
-  tagline: "",
-  whatsappNumber: "601114155848",
-  telegram: "",
-  areas: ["吉隆坡", "Cheras", "Puchong", "Kajang", "Setapak", "Subang", "Petaling Jaya", "Ampang"],
-  technicians: [
-    { id: 1, name: "小玲", age: 28, area: "Cheras", coverBg: "linear-gradient(135deg, #667eea, #764ba2)", specialties: ["泰式按摩", "肩颈理疗", "精油推拿"], rating: 4.8, reviewCount: 126, price: "RM 90/小时", phone: "601114155848", available: true, experience: "8年经验", height: "162cm", weight: "52kg", bust: "", origin: "", bio: "精通泰式古法按摩，擅长肩颈放松和全身拉伸。上门服务态度好，准时守约，顾客回头率极高。", serviceRange: "Cheras及周边5公里", photos: [], videoUrl: "", services: [{name:"泰式按摩（1小时）",price:"RM 90"},{name:"肩颈理疗（45分钟）",price:"RM 70"},{name:"全身精油推拿（1.5小时）",price:"RM 130"}], reviews: [{user:"匿名用户",rating:5,text:"手法很好，按完整个人都松了"},{user:"Alex",rating:5,text:"准时上门，态度好，推荐！"}] },
-    { id: 2, name: "小美", age: 26, area: "Puchong", coverBg: "linear-gradient(135deg, #f093fb, #f5576c)", specialties: ["精油推拿", "脚底按摩", "淋巴排毒"], rating: 4.6, reviewCount: 98, price: "RM 80/小时", phone: "601114155848", available: true, experience: "5年经验", height: "158cm", weight: "48kg", bust: "", origin: "", bio: "专精精油推拿和脚底穴位按摩，手法温柔细腻，第一次做按摩的客人都很喜欢。", serviceRange: "Puchong及附近", photos: [], videoUrl: "", services: [{name:"精油推拿（1小时）",price:"RM 80"},{name:"脚底按摩（45分钟）",price:"RM 60"},{name:"淋巴排毒（1.5小时）",price:"RM 120"}], reviews: [{user:"Ken",rating:5,text:"小美人很温柔，按得很舒服"},{user:"薇薇",rating:4,text:"手法不错，推荐"}] },
-    { id: 3, name: "丽丽", age: 32, area: "吉隆坡", coverBg: "linear-gradient(135deg, #4facfe, #00f2fe)", specialties: ["传统马来按摩", "产后修复", "全身拉伸"], rating: 4.9, reviewCount: 203, price: "RM 100/小时", phone: "601114155848", available: true, experience: "12年经验", height: "165cm", weight: "55kg", bust: "", origin: "", bio: "资深按摩师，专长传统马来按摩和产后修复。手法老道、力道精准，很多老顾客跟了她好几年。", serviceRange: "吉隆坡市区", photos: [], videoUrl: "", services: [{name:"传统马来按摩（1小时）",price:"RM 100"},{name:"产后修复（1.5小时）",price:"RM 150"},{name:"全身拉伸放松（1小时）",price:"RM 90"}], reviews: [{user:"江先生",rating:5,text:"做了半年多的老顾客了"},{user:"May",rating:5,text:"产后恢复得很好"}] },
-    { id: 4, name: "小花", age: 27, area: "Kajang", coverBg: "linear-gradient(135deg, #a18cd1, #fbc2eb)", specialties: ["中式推拿", "拔罐刮痧", "穴位按摩"], rating: 4.7, reviewCount: 75, price: "RM 85/小时", phone: "601114155848", available: true, experience: "7年经验", height: "160cm", weight: "50kg", bust: "", origin: "", bio: "正宗中式推拿手法，兼修拔罐刮痧。擅长缓解肌肉酸痛，常年坐办公室的最爱。", serviceRange: "Kajang及周边", photos: [], videoUrl: "", services: [{name:"中式推拿（1小时）",price:"RM 85"},{name:"拔罐刮痧（45分钟）",price:"RM 65"},{name:"综合理疗（1.5小时）",price:"RM 120"}], reviews: [{user:"程序员小王",rating:5,text:"肩膀终于不酸了"},{user:"Lisa",rating:4,text:"拔罐力度刚好"}] },
-    { id: 5, name: "Yuki", age: 25, area: "Setapak", coverBg: "linear-gradient(135deg, #fccb90, #d57eeb)", specialties: ["日式指压", "头部SPA", "香薰按摩"], rating: 4.5, reviewCount: 62, price: "RM 95/小时", phone: "601114155848", available: true, experience: "4年经验", height: "156cm", weight: "46kg", bust: "", origin: "", bio: "日式指压技法，配合头部SPA和芳香疗法。年轻有活力，服务态度超好。", serviceRange: "Setapak / Wangsa Maju", photos: [], videoUrl: "", services: [{name:"日式指压（1小时）",price:"RM 95"},{name:"头部SPA（45分钟）",price:"RM 75"},{name:"香薰放松套餐（1.5小时）",price:"RM 140"}], reviews: [{user:"Eric",rating:5,text:"头部SPA太舒服了"}] },
-    { id: 6, name: "阿May", age: 34, area: "Subang", coverBg: "linear-gradient(135deg, #5ee7df, #b490ca)", specialties: ["泰式按摩", "热石理疗", "深层组织"], rating: 4.8, reviewCount: 154, price: "RM 110/小时", phone: "601114155848", available: true, experience: "10年经验", height: "163cm", weight: "54kg", bust: "", origin: "", bio: "泰式按摩和热石理疗，手法有力到位。常年肌肉酸痛的朋友找她准没错。", serviceRange: "Subang / USJ", photos: [], videoUrl: "", services: [{name:"泰式按摩（1小时）",price:"RM 110"},{name:"热石理疗（1.5小时）",price:"RM 160"},{name:"深层组织放松（2小时）",price:"RM 200"}], reviews: [{user:"阿Ben",rating:5,text:"May姐力度够"}] },
-    { id: 7, name: "小玉", age: 29, area: "Petaling Jaya", coverBg: "linear-gradient(135deg, #fa709a, #fee140)", specialties: ["泰式按摩", "精油推拿"], rating: 4.7, reviewCount: 88, price: "RM 85/小时", phone: "601114155848", available: true, experience: "6年经验", height: "160cm", weight: "51kg", bust: "", origin: "", bio: "热情开朗，手法灵活多变，根据客人身体状况调整。", serviceRange: "PJ / Damansara", photos: [], videoUrl: "", services: [{name:"泰式按摩（1小时）",price:"RM 85"},{name:"精油推拿（1小时）",price:"RM 85"},{name:"全身放松（1.5小时）",price:"RM 120"}], reviews: [{user:"David",rating:5,text:"小玉很专业"}] },
-    { id: 8, name: "Coco", age: 24, area: "Cheras", coverBg: "linear-gradient(135deg, #ffecd2, #fcb69f)", specialties: ["精油推拿", "香薰SPA", "热石"], rating: 4.4, reviewCount: 45, price: "RM 95/小时", phone: "601114155848", available: true, experience: "3年经验", height: "165cm", weight: "50kg", bust: "", origin: "", bio: "年轻时尚，擅长精油推拿和香薰SPA。手法温柔细腻。", serviceRange: "Cheras", photos: [], videoUrl: "", services: [{name:"精油推拿（1小时）",price:"RM 95"},{name:"香薰SPA（1.5小时）",price:"RM 140"},{name:"热石放松（1小时）",price:"RM 100"}], reviews: [{user:"阿杰",rating:5,text:"Coco环境香香的"}] },
-  ]
-};
+// ===== 🦀 按按摩 - 管理后台 (Supabase 版) =====
 
-// ===== State =====
-let nextId = data.technicians.length ? Math.max(...data.technicians.map(t => t.id)) + 1 : 9;
+let data = { siteName: "", tagline: "", whatsappNumber: "", telegram: "", areas: [], technicians: [] };
+let nextId = 100;
 let currentTab = 'config';
+let sb = null;
+
+// ===== Supabase 连接 =====
+function getSupabaseClient() {
+  const url = localStorage.getItem('supabase_url');
+  const key = localStorage.getItem('supabase_anon_key');
+  if (!url || !key || url.includes('YOUR_PROJECT')) return null;
+  try {
+    return supabase.createClient(url, key);
+  } catch(e) {
+    return null;
+  }
+}
+
+async function loadAllData() {
+  sb = getSupabaseClient();
+  if (!sb) {
+    // Fallback: 从 data.js 读
+    data = {
+      siteName: SITE_CONFIG.siteName,
+      tagline: SITE_CONFIG.tagline,
+      whatsappNumber: SITE_CONFIG.whatsappNumber,
+      telegram: SITE_CONFIG.telegram,
+      areas: SITE_CONFIG.areas,
+      technicians: JSON.parse(JSON.stringify(technicians)),
+    };
+    if (data.technicians.length) nextId = Math.max(...data.technicians.map(t => t.id)) + 1;
+    loadConfig();
+    renderTechs();
+    document.getElementById('supabaseStatus').textContent = '⚪ 本地模式';
+    return;
+  }
+
+  document.getElementById('supabaseStatus').textContent = '🔄 加载中...';
+
+  try {
+    // 加载配置
+    const { data: cfg } = await sb.from('site_config').select('*').eq('id', 1).maybeSingle();
+    if (cfg) {
+      data.siteName = cfg.site_name;
+      data.tagline = cfg.tagline;
+      data.whatsappNumber = cfg.whatsapp_number;
+      data.telegram = cfg.telegram || '';
+      data.areas = cfg.areas || [];
+    }
+
+    // 加载技师
+    const { data: techs } = await sb.from('technicians').select('*').order('sort_order').order('id');
+    if (techs && techs.length) {
+      data.technicians = techs.map(t => ({
+        id: t.id,
+        name: t.name,
+        age: t.age,
+        area: t.area,
+        coverBg: t.cover_bg,
+        specialties: t.specialties || [],
+        rating: t.rating,
+        reviewCount: t.review_count,
+        price: t.price,
+        phone: t.phone || '',
+        available: t.available,
+        experience: t.experience || '',
+        height: t.height || '',
+        weight: t.weight || '',
+        bust: t.bust || '',
+        origin: t.origin || '',
+        bio: t.bio || '',
+        serviceRange: t.service_range || '',
+        photos: t.photo_urls || [],
+        videoUrl: t.video_url || '',
+        services: (typeof t.services === 'string' ? JSON.parse(t.services) : t.services) || [],
+        reviews: (typeof t.reviews === 'string' ? JSON.parse(t.reviews) : t.reviews) || [],
+        sort_order: t.sort_order || 0,
+      }));
+      nextId = Math.max(...data.technicians.map(t => t.id)) + 1;
+    }
+
+    document.getElementById('supabaseStatus').textContent = '🟢 Supabase 在线';
+  } catch(e) {
+    document.getElementById('supabaseStatus').textContent = '🔴 加载失败: ' + e.message;
+    console.error(e);
+  }
+
+  loadConfig();
+  renderTechs();
+}
 
 // ===== Tab =====
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach((t,i) => {
-    const tabNames = ['config', 'techs', 'analytics'];
+    const tabNames = ['config', 'techs', 'analytics', 'database'];
     t.classList.toggle('active', tabNames[i] === tab);
   });
   document.getElementById('tab-config').classList.toggle('active', tab === 'config');
   document.getElementById('tab-techs').classList.toggle('active', tab === 'techs');
   document.getElementById('tab-analytics').classList.toggle('active', tab === 'analytics');
+  document.getElementById('tab-database').classList.toggle('active', tab === 'database');
   if (tab === 'config') loadConfig();
   if (tab === 'techs') renderTechs();
   if (tab === 'analytics') loadAnalytics();
 }
 
-// ===== Analytics / Umami 看板 =====
-let umamiConfig = null;
-
-function loadAnalytics() {
-  // 如果还没有配置，自动填入默认值
-  if (!localStorage.getItem('umamiConfig')) {
-    localStorage.setItem('umamiConfig', JSON.stringify({
-      url: 'https://d0bde631cd377f.lhr.life',
-      siteId: '47384b7d-4d25-4293-9f69-c3b1e0e696e6'
-    }));
-  }
-  // 从存储读取配置
-  const saved = localStorage.getItem('umamiConfig');
-  const container = document.getElementById('analyticsIframeContainer');
-  const status = document.getElementById('analytics-status');
-
-  if (!saved) {
-    container.innerHTML = `
-      <div style="font-size:3rem;">📊</div>
-      <div style="color:var(--admin-muted);text-align:center;font-size:0.9rem;max-width:400px;">
-        <p style="margin-bottom:12px;">还没有配置 Umami 看板</p>
-        <p style="margin-bottom:4px;">部署 Umami 后在后台创建站点，获得：</p>
-        <p style="margin-bottom:4px;">① Umami 部署地址（如：https://xxx.vercel.app）</p>
-        <p style="margin-bottom:8px;">② Website ID（站点标识）</p>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
-          <input type="text" id="umami-url" placeholder="Umami 地址" style="padding:10px;border-radius:8px;border:1px solid var(--admin-border);background:var(--admin-input);color:white;font-size:0.85rem;">
-          <input type="text" id="umami-site-id" placeholder="Website ID" style="padding:10px;border-radius:8px;border:1px solid var(--admin-border);background:var(--admin-input);color:white;font-size:0.85rem;">
-          <button onclick="saveUmamiConfig()" style="padding:10px;border:none;border-radius:8px;background:var(--admin-primary);color:white;cursor:pointer;font-size:0.85rem;">💾 保存并加载</button>
-        </div>
+// ===== 新增：数据库配置 Tab =====
+function renderDatabaseConfig() {
+  const el = document.getElementById('tab-database');
+  const savedUrl = localStorage.getItem('supabase_url') || '';
+  const savedKey = localStorage.getItem('supabase_anon_key') || '';
+  el.innerHTML = `
+    <div style="max-width:600px;">
+      <h3 style="margin-bottom:16px;font-size:1.1rem;">☁️ Supabase 数据库设置</h3>
+      <div class="config-field" style="margin-bottom:16px;">
+        <label>Project URL</label>
+        <input type="text" id="db-url" value="${escHtml(savedUrl)}" placeholder="https://xxxxx.supabase.co" style="width:100%;padding:10px;background:var(--admin-input);border:1px solid var(--admin-border);border-radius:6px;color:white;font-size:0.85rem;font-family:inherit;outline:none;" />
       </div>
-    `;
-    if (status) status.textContent = '⚙️ 待配置';
-    return;
-  }
-
-  try {
-    umamiConfig = JSON.parse(saved);
-    if (status) status.textContent = '🟢 已连接';
-    loadUmamiDashboard(umamiConfig);
-  } catch(e) {
-    container.innerHTML = '<div style="color:var(--admin-danger);">配置读取失败</div>';
-  }
-}
-
-function saveUmamiConfig() {
-  const url = document.getElementById('umami-url')?.value.trim();
-  const siteId = document.getElementById('umami-site-id')?.value.trim();
-  if (!url || !siteId) {
-    alert('请填写 Umami 地址和 Website ID');
-    return;
-  }
-  const config = { url, siteId };
-  localStorage.setItem('umamiConfig', JSON.stringify(config));
-  umamiConfig = config;
-  const status = document.getElementById('analytics-status');
-  if (status) status.textContent = '🟢 已连接';
-  loadUmamiDashboard(config);
-}
-
-function loadUmamiDashboard(config) {
-  const container = document.getElementById('analyticsIframeContainer');
-  // 替换 analytics.js 中的占位符
-  const umamiUrl = config.url.replace(/\/$/, '');
-  container.innerHTML = `
-    <div style="width:100%;display:flex;gap:8px;margin-bottom:12px;">
-      <button onclick="resetUmamiConfig()" style="padding:6px 14px;border:1px solid var(--admin-border);border-radius:6px;background:transparent;color:var(--admin-muted);cursor:pointer;font-size:0.8rem;">⚙️ 重新配置</button>
-      <a href="${umamiUrl}" target="_blank" style="padding:6px 14px;border:1px solid var(--admin-border);border-radius:6px;background:transparent;color:var(--admin-primary);cursor:pointer;font-size:0.8rem;text-decoration:none;">🔗 打开 Umami</a>
+      <div class="config-field" style="margin-bottom:16px;">
+        <label>Anon Public Key</label>
+        <input type="text" id="db-key" value="${escHtml(savedKey)}" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="width:100%;padding:10px;background:var(--admin-input);border:1px solid var(--admin-border);border-radius:6px;color:white;font-size:0.85rem;font-family:inherit;outline:none;" />
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" onclick="saveDatabaseConfig()">💾 保存并连接</button>
+        <span id="dbTestResult" style="align-self:center;font-size:0.85rem;"></span>
+      </div>
+      <div style="margin-top:20px;padding:16px;background:var(--admin-card);border-radius:8px;border:1px solid var(--admin-border);">
+        <h4 style="color:var(--admin-muted);font-size:0.85rem;margin-bottom:8px;">📋 首次使用步骤</h4>
+        <ol style="font-size:0.82rem;color:var(--admin-muted);line-height:1.8;padding-left:20px;">
+          <li>去 <a href="https://supabase.com" target="_blank" style="color:var(--admin-primary);">supabase.com</a> 注册免费账号</li>
+          <li>创建新项目（选 Free 套餐）</li>
+          <li>记下 Project Settings → API 里的 Project URL 和 anon key</li>
+          <li>这里的 SQL Editor → 粘贴执行 <code style="background:#333;padding:1px 5px;border-radius:3px;">supabase/schema.sql</code></li>
+          <li>回这里填上 URL 和 Key，保存即可</li>
+        </ol>
+      </div>
     </div>
-    <iframe src="${umamiUrl}/share/${config.siteId}" style="width:100%;min-height:600px;border:none;border-radius:8px;" allow="cross-origin-isolated"></iframe>
   `;
 }
 
-function resetUmamiConfig() {
-  localStorage.removeItem('umamiConfig');
-  umamiConfig = null;
-  loadAnalytics();
+function saveDatabaseConfig() {
+  const url = document.getElementById('db-url').value.trim();
+  const key = document.getElementById('db-key').value.trim();
+  if (!url || !key) { showToast('⚠️ 请填写 URL 和 Key'); return; }
+  if (!url.includes('supabase.co')) { showToast('⚠️ URL 格式不对，应该是 https://xxx.supabase.co'); return; }
+  localStorage.setItem('supabase_url', url);
+  localStorage.setItem('supabase_anon_key', key);
+  document.getElementById('dbTestResult').textContent = '🔄 测试连接...';
+  // 测试并重新加载
+  sb = getSupabaseClient();
+  if (!sb) {
+    document.getElementById('dbTestResult').textContent = '🔴 连接失败';
+    showToast('🔴 连接失败');
+    return;
+  }
+  loadAllData();
+  showToast('✅ 数据库配置已保存，数据已加载');
 }
 
 // ===== Config =====
 function loadConfig() {
-  document.getElementById('cfg-siteName').value = data.siteName;
-  document.getElementById('cfg-tagline').value = data.tagline;
-  document.getElementById('cfg-whatsapp').value = data.whatsappNumber;
+  document.getElementById('cfg-siteName').value = data.siteName || '';
+  document.getElementById('cfg-tagline').value = data.tagline || '';
+  document.getElementById('cfg-whatsapp').value = data.whatsappNumber || '';
   document.getElementById('cfg-telegram').value = data.telegram || '';
-  document.getElementById('cfg-areas').value = data.areas.join(', ');
+  document.getElementById('cfg-areas').value = (data.areas || []).join(', ');
 }
 
-function saveConfig() {
+async function saveConfig() {
   data.siteName = document.getElementById('cfg-siteName').value.trim();
   data.tagline = document.getElementById('cfg-tagline').value.trim();
   data.whatsappNumber = document.getElementById('cfg-whatsapp').value.trim();
   data.telegram = document.getElementById('cfg-telegram').value.trim();
   data.areas = document.getElementById('cfg-areas').value.split(/[,，\s]+/).filter(Boolean);
-  showToast('✅ 网站设置已保存');
+
+  if (sb) {
+    try {
+      const { error } = await sb.from('site_config').upsert({
+        id: 1,
+        site_name: data.siteName,
+        tagline: data.tagline,
+        whatsapp_number: data.whatsappNumber,
+        telegram: data.telegram,
+        areas: data.areas,
+        updated_at: new Date().toISOString(),
+      });
+      if (error) throw error;
+      showToast('✅ 设置已保存到 Supabase');
+    } catch(e) {
+      showToast('❌ 保存失败: ' + e.message);
+      console.error(e);
+    }
+  } else {
+    showToast('✅ 网站设置已保存（仅本地）');
+  }
 }
 
 // ===== Technicians =====
@@ -198,43 +255,24 @@ function renderTechs() {
             </select>
           </div>
           <div class="field-group">
-            <label>渐变背景色（CSS）</label>
+            <label>渐变背景色</label>
             <input type="text" value="${escHtml(t.coverBg)}" onchange="updateField(${idx},'coverBg',this.value)" />
           </div>
         </div>
         <div class="form-row form-row-2">
           <div class="field-group" style="grid-column:1/-1;">
-            <label>技师照片（至少 3 张）</label>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;" id="photoGallery-${idx}">
-              ${renderPhotoGallery(idx)}
-            </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-              <input type="file" accept="image/*" multiple onchange="uploadPhotos(${idx},this)" style="font-size:0.8rem;color:var(--admin-muted);" />
-              <span style="font-size:0.75rem;color:var(--admin-muted);">或</span>
-              <div style="display:flex;gap:4px;flex:1;min-width:140px;">
-                <input type="text" id="photoUrlInput-${idx}" placeholder="粘贴图片 URL" style="flex:1;padding:6px 10px;background:var(--admin-input);border:1px solid var(--admin-border);border-radius:4px;color:white;font-size:0.8rem;font-family:inherit;outline:none;" />
-                <button class="btn btn-primary btn-sm" onclick="addPhotoUrl(${idx})">添加</button>
-              </div>
-            </div>
+            <label>照片 URL（每行一个）</label>
+            <textarea rows="3" onchange="updatePhotos(${idx},this.value)">${(t.photos||[]).join('\n')}</textarea>
             <div style="margin-top:6px;font-size:0.75rem;color:var(--admin-muted);">
-              当前 ${(t.photos||[]).length} 张照片 ${(t.photos||[]).length < 3 ? '（还差 '+(3-(t.photos||[]).length)+' 张）' : '✅'}
+              当前 ${(t.photos||[]).filter(p => p).length} 张照片
+              ${sb ? '<span style="color:var(--admin-success);"> · 建议上传到 Supabase Storage 后使用公开 URL</span>' : ''}
             </div>
           </div>
         </div>
         <div class="form-row form-row-2">
           <div class="field-group" style="grid-column:1/-1;">
-            <label>视频（可选）</label>
-            <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;">
-              <div id="videoPreview-${idx}" style="width:140px;height:80px;border-radius:8px;overflow:hidden;background:var(--admin-input);border:1px solid var(--admin-border);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:var(--admin-muted);flex-shrink:0;">
-                ${t.videoUrl ? (t.videoUrl.startsWith('data:') ? '<video src="'+escHtml(t.videoUrl)+'" style="width:100%;height:100%;object-fit:cover;" muted />' : '🎬') : '无视频'}
-              </div>
-              <div style="flex:1;min-width:120px;">
-                <input type="file" accept="video/*" onchange="uploadVideo(${idx},this)" style="font-size:0.8rem;color:var(--admin-muted);margin-bottom:6px;" />
-                <input type="text" placeholder="或粘贴 YouTube / 视频直链 URL" value="${escHtml(t.videoUrl&&!t.videoUrl.startsWith('data:')?t.videoUrl:'')}" onchange="setVideoUrl(${idx},this.value)" style="width:100%;padding:8px 10px;background:var(--admin-input);border:1px solid var(--admin-border);border-radius:4px;color:white;font-size:0.85rem;font-family:inherit;outline:none;" />
-                <div style="margin-top:4px;font-size:0.75rem;color:var(--admin-muted);">支持上传视频文件（最大 10MB）或 YouTube / 直链</div>
-                ${t.videoUrl ? '<button class="btn btn-danger btn-sm" onclick="removeVideo('+idx+')" style="margin-top:4px;">🗑 删除视频</button>' : ''}
-              </div>
-            </div>
+            <label>视频 URL</label>
+            <input type="text" value="${escHtml(t.videoUrl)}" onchange="updateField(${idx},'videoUrl',this.value)" />
           </div>
         </div>
         <div class="form-row form-row-2">
@@ -244,19 +282,19 @@ function renderTechs() {
           </div>
           <div class="field-group">
             <label>身高</label>
-            <input type="text" value="${escHtml(t.height||'')}" placeholder="身高" onchange="updateField(${idx},'height',this.value)" />
+            <input type="text" value="${escHtml(t.height||'')}" onchange="updateField(${idx},'height',this.value)" />
           </div>
           <div class="field-group">
             <label>体重</label>
-            <input type="text" value="${escHtml(t.weight||'')}" placeholder="体重" onchange="updateField(${idx},'weight',this.value)" />
+            <input type="text" value="${escHtml(t.weight||'')}" onchange="updateField(${idx},'weight',this.value)" />
           </div>
           <div class="field-group">
             <label>胸围</label>
-            <input type="text" value="${escHtml(t.bust||'')}" placeholder="如：32C" onchange="updateField(${idx},'bust',this.value)" />
+            <input type="text" value="${escHtml(t.bust||'')}" onchange="updateField(${idx},'bust',this.value)" />
           </div>
           <div class="field-group">
             <label>产地</label>
-            <input type="text" value="${escHtml(t.origin||'')}" placeholder="如：越南、泰国" onchange="updateField(${idx},'origin',this.value)" />
+            <input type="text" value="${escHtml(t.origin||'')}" onchange="updateField(${idx},'origin',this.value)" />
           </div>
         </div>
         <div class="form-row form-row-full">
@@ -272,7 +310,6 @@ function renderTechs() {
           </div>
         </div>
 
-        <!-- Specialties -->
         <div class="field-group" style="margin-top:8px;">
           <label>专长标签</label>
           <div class="specialties-editor" id="specs-${idx}"></div>
@@ -282,14 +319,12 @@ function renderTechs() {
           </div>
         </div>
 
-        <!-- Services -->
         <div class="field-group" style="margin-top:12px;">
           <label>服务项目与价格</label>
           <div class="services-editor" id="services-${idx}"></div>
           <button class="item-add" onclick="addService(${idx})">➕ 添加服务项目</button>
         </div>
 
-        <!-- Reviews -->
         <div class="field-group" style="margin-top:12px;">
           <label>顾客评价</label>
           <div class="reviews-editor" id="reviews-${idx}"></div>
@@ -297,7 +332,8 @@ function renderTechs() {
         </div>
 
         <div class="tech-card-actions">
-          <button class="btn btn-danger btn-sm" onclick="deleteTechnician(${idx})">🗑 删除此技师</button>
+          <button class="btn btn-primary btn-sm" onclick="saveTechnician(${idx})">💾 保存到数据库</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteTechnician(${idx})">🗑 删除</button>
         </div>
       </div>
     `;
@@ -307,6 +343,59 @@ function renderTechs() {
     renderReviews(idx);
   });
   document.getElementById('techCount').textContent = `共 ${data.technicians.length} 位技师`;
+}
+
+// ===== 新增：保存单个技师到 Supabase =====
+async function saveTechnician(idx) {
+  if (!sb) { showToast('⚠️ 未连接数据库，先配置 Supabase'); return; }
+  const t = data.technicians[idx];
+  if (!t) return;
+
+  try {
+    const record = {
+      name: t.name,
+      age: t.age,
+      area: t.area,
+      cover_bg: t.coverBg,
+      specialties: t.specialties || [],
+      rating: t.rating,
+      review_count: t.reviewCount || 0,
+      price: t.price,
+      phone: t.phone || '',
+      available: t.available,
+      experience: t.experience || '',
+      height: t.height || '',
+      weight: t.weight || '',
+      bust: t.bust || '',
+      origin: t.origin || '',
+      bio: t.bio || '',
+      service_range: t.serviceRange || '',
+      photo_urls: (t.photos || []).filter(p => p),
+      video_url: t.videoUrl || '',
+      services: t.services || [],
+      reviews: t.reviews || [],
+      sort_order: t.sort_order || idx,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (t.id > 0) {
+      // 更新
+      const { error } = await sb.from('technicians').update(record).eq('id', t.id);
+      if (error) throw error;
+      showToast(`✅ ${t.name} 已更新`);
+    } else {
+      // 新增
+      const { data: inserted, error } = await sb.from('technicians').insert(record).select();
+      if (error) throw error;
+      if (inserted && inserted[0]) {
+        t.id = inserted[0].id;
+      }
+      showToast(`✅ ${t.name} 已添加`);
+    }
+  } catch(e) {
+    showToast('❌ 保存失败: ' + e.message);
+    console.error(e);
+  }
 }
 
 function toggleCard(idx) {
@@ -320,107 +409,15 @@ function updateField(idx, key, value) {
   data.technicians[idx][key] = value;
 }
 
-function renderPhotoGallery(idx) {
-  const photos = data.technicians[idx].photos || [];
-  if (!photos.length) return '<div style="color:var(--admin-muted);font-size:0.8rem;">暂无照片</div>';
-  return photos.map((p, pi) => `
-    <div style="position:relative;width:80px;height:80px;border-radius:8px;overflow:hidden;border:1px solid var(--admin-border);flex-shrink:0;">
-      <img src="${escHtml(p)}" style="width:100%;height:100%;object-fit:cover;" />
-      <button onclick="removePhotoFromGallery(${idx},${pi})" style="position:absolute;top:2px;right:2px;width:20px;height:20px;border-radius:50%;border:none;background:rgba(239,68,68,0.85);color:white;font-size:0.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;">✕</button>
-    </div>
-  `).join('');
-}
-
-function uploadPhotos(idx, input) {
-  const files = Array.from(input.files);
-  if (!files.length) return;
-  const oversized = files.filter(f => f.size > 2 * 1024 * 1024);
-  if (oversized.length) {
-    showToast('⚠️ 部分图片超过 2MB，已跳过');
-  }
-  const validFiles = files.filter(f => f.size <= 2 * 1024 * 1024);
-  if (!validFiles.length) { input.value = ''; return; }
-  let loaded = 0;
-  validFiles.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      data.technicians[idx].photos = data.technicians[idx].photos || [];
-      data.technicians[idx].photos.push(e.target.result);
-      loaded++;
-      if (loaded === validFiles.length) {
-        input.value = '';
-        renderTechs();
-        const body = document.getElementById(`cardBody-${idx}`);
-        if (body) body.classList.add('open');
-        showToast('✅ 已添加 ' + loaded + ' 张照片');
-      }
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-function addPhotoUrl(idx) {
-  const input = document.getElementById(`photoUrlInput-${idx}`);
-  const url = input.value.trim();
-  if (!url) return;
-  data.technicians[idx].photos = data.technicians[idx].photos || [];
-  data.technicians[idx].photos.push(url);
-  input.value = '';
-  renderTechs();
-  const body = document.getElementById(`cardBody-${idx}`);
-  if (body) body.classList.add('open');
-  showToast('✅ 已添加图片 URL');
-}
-
-function removePhotoFromGallery(idx, pi) {
-  data.technicians[idx].photos = data.technicians[idx].photos || [];
-  data.technicians[idx].photos.splice(pi, 1);
-  renderTechs();
-  const body = document.getElementById(`cardBody-${idx}`);
-  if (body) body.classList.add('open');
-  showToast('🗑 已删除');
-}
-
-function uploadVideo(idx, input) {
-  const file = input.files[0];
-  if (!file) return;
-  if (file.size > 10 * 1024 * 1024) {
-    showToast('⚠️ 视频不能超过 10MB');
-    input.value = '';
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    data.technicians[idx].videoUrl = e.target.result;
-    input.value = '';
-    renderTechs();
-    const body = document.getElementById(`cardBody-${idx}`);
-    if (body) body.classList.add('open');
-    showToast('✅ 视频已添加');
-  };
-  reader.readAsDataURL(file);
-}
-
-function setVideoUrl(idx, url) {
-  data.technicians[idx].videoUrl = url.trim();
-  renderTechs();
-  const body = document.getElementById(`cardBody-${idx}`);
-  if (body) body.classList.add('open');
-}
-
-function removeVideo(idx) {
-  data.technicians[idx].videoUrl = '';
-  renderTechs();
-  const body = document.getElementById(`cardBody-${idx}`);
-  if (body) body.classList.add('open');
-  showToast('🗑 视频已删除');
+function updatePhotos(idx, text) {
+  data.technicians[idx].photos = text.split('\n').map(s => s.trim()).filter(Boolean);
 }
 
 function renderSpecialties(idx) {
   const el = document.getElementById(`specs-${idx}`);
   if (!el) return;
   const t = data.technicians[idx];
-  el.innerHTML = t.specialties.map((s, si) =>
+  el.innerHTML = (t.specialties || []).map((s, si) =>
     `<span class="spec-tag">${escHtml(s)} <span class="spec-remove" onclick="removeSpecialty(${idx},${si})">✕</span></span>`
   ).join('');
 }
@@ -429,6 +426,7 @@ function addSpecialty(idx) {
   const input = document.getElementById(`specInput-${idx}`);
   const val = input.value.trim();
   if (!val) return;
+  if (!data.technicians[idx].specialties) data.technicians[idx].specialties = [];
   data.technicians[idx].specialties.push(val);
   input.value = '';
   renderSpecialties(idx);
@@ -443,7 +441,7 @@ function renderServices(idx) {
   const el = document.getElementById(`services-${idx}`);
   if (!el) return;
   const t = data.technicians[idx];
-  el.innerHTML = t.services.map((s, si) =>
+  el.innerHTML = (t.services || []).map((s, si) =>
     `<div class="item-row">
       <input type="text" value="${escHtml(s.name)}" placeholder="服务名称" onchange="updateService(${idx},${si},'name',this.value)" />
       <input type="text" class="item-price" value="${escHtml(s.price)}" placeholder="价格" onchange="updateService(${idx},${si},'price',this.value)" />
@@ -453,10 +451,12 @@ function renderServices(idx) {
 }
 
 function updateService(idx, si, key, value) {
+  if (!data.technicians[idx].services[si]) data.technicians[idx].services[si] = {};
   data.technicians[idx].services[si][key] = value;
 }
 
 function addService(idx) {
+  if (!data.technicians[idx].services) data.technicians[idx].services = [];
   data.technicians[idx].services.push({ name: "", price: "" });
   renderServices(idx);
 }
@@ -470,7 +470,7 @@ function renderReviews(idx) {
   const el = document.getElementById(`reviews-${idx}`);
   if (!el) return;
   const t = data.technicians[idx];
-  el.innerHTML = t.reviews.map((r, ri) =>
+  el.innerHTML = (t.reviews || []).map((r, ri) =>
     `<div class="item-row">
       <input type="text" value="${escHtml(r.user)}" placeholder="评价人" onchange="updateReview(${idx},${ri},'user',this.value)" style="max-width:100px;" />
       <input type="number" class="item-rating" value="${r.rating}" min="1" max="5" placeholder="评分" onchange="updateReview(${idx},${ri},'rating',parseInt(this.value)||5)" />
@@ -481,10 +481,12 @@ function renderReviews(idx) {
 }
 
 function updateReview(idx, ri, key, value) {
+  if (!data.technicians[idx].reviews[ri]) data.technicians[idx].reviews[ri] = {};
   data.technicians[idx].reviews[ri][key] = value;
 }
 
 function addReview(idx) {
+  if (!data.technicians[idx].reviews) data.technicians[idx].reviews = [];
   data.technicians[idx].reviews.push({ user: "", rating: 5, text: "" });
   renderReviews(idx);
 }
@@ -496,7 +498,7 @@ function removeReview(idx, ri) {
 
 function addTechnician() {
   data.technicians.push({
-    id: nextId++,
+    id: 0,  // 0 表示新技师，保存到 Supabase 时自动生成
     name: "新技师",
     age: 25,
     area: "吉隆坡",
@@ -513,48 +515,50 @@ function addTechnician() {
     bust: "",
     origin: "",
     bio: "",
-    serviceRange: "", photos: [], videoUrl: "",
-    photo: "",
+    serviceRange: "",
+    photos: [],
+    videoUrl: "",
     services: [{ name: "按摩（1小时）", price: "RM 80" }],
     reviews: []
   });
   renderTechs();
-  showToast('✅ 已添加新技师');
 }
 
 function deleteTechnician(idx) {
-  if (!confirm(`确定删除 ${data.technicians[idx].name} 吗？`)) return;
+  const t = data.technicians[idx];
+  if (!confirm(`确定删除 ${t.name} 吗？`)) return;
+
+  if (sb && t.id > 0) {
+    sb.from('technicians').delete().eq('id', t.id).then(({ error }) => {
+      if (error) console.error(error);
+    });
+  }
+
   data.technicians.splice(idx, 1);
   renderTechs();
   showToast('🗑 已删除');
 }
 
-// ===== Export =====
+// ===== Export / Preview =====
 function exportData() {
-  // Build the data.js file content
+  showToast('📥 使用 Supabase 后不需要导出 data.js，数据已在云端');
+  // 仍然提供传统导出
   let areasStr = JSON.stringify(data.areas, null, 2);
   let techsStr = JSON.stringify(data.technicians.map(t => {
-    // Reorder fields for cleaner output
     const {id, name, age, area, coverBg, specialties, rating, reviewCount, price, phone, available, experience, height, weight, bust, origin, bio, serviceRange, photos, videoUrl, services, reviews} = t;
     return {id, name, age, area, coverBg, specialties, rating, reviewCount, price, phone, available, experience, height, weight, bust, origin, bio, serviceRange, photos, videoUrl, services, reviews};
   }), null, 2);
 
-  const output = `/**
- * 🦀 按按摩 - 技师数据
- * 由 懂懂的管理后台 生成 — 改这个文件就行
- */
-
-const SITE_CONFIG = {
-  siteName: ${JSON.stringify(data.siteName)},
-  tagline: ${JSON.stringify(data.tagline)},
-  whatsappNumber: "${data.whatsappNumber}",
-  telegram: "${data.telegram}",
-  areas: ${areasStr},
-};
+  const output = `const SITE_CONFIG = ${JSON.stringify({
+    siteName: data.siteName,
+    tagline: data.tagline,
+    whatsappNumber: data.whatsappNumber,
+    telegram: data.telegram,
+    areas: data.areas,
+  }, null, 2)};
 
 const technicians = ${techsStr};
 
-// ===== 工具函数 =====
 function getTechnicianById(id) {
   return technicians.find(t => t.id === parseInt(id));
 }
@@ -566,7 +570,6 @@ function getTechniciansByArea(area) {
   return technicians.filter(t => t.area === area);
 }
 `;
-
   const blob = new Blob([output], { type: 'text/javascript;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -576,7 +579,6 @@ function getTechniciansByArea(area) {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  showToast('📥 data.js 已下载，替换 massage-kl/js/data.js 即可');
 }
 
 function previewData() {
@@ -593,11 +595,58 @@ function previewData() {
   w.document.close();
 }
 
+// ===== Analytics (Umami) =====
+function loadAnalytics() {
+  if (!localStorage.getItem('umamiConfig')) {
+    localStorage.setItem('umamiConfig', JSON.stringify({
+      url: 'https://d0bde631cd377f.lhr.life',
+      siteId: '47384b7d-4d25-4293-9f69-c3b1e0e696e6'
+    }));
+  }
+  const saved = localStorage.getItem('umamiConfig');
+  const container = document.getElementById('analyticsIframeContainer');
+  const status = document.getElementById('analytics-status');
+
+  if (!saved) {
+    container.innerHTML = `
+      <div style="font-size:3rem;">📊</div>
+      <div style="color:var(--admin-muted);text-align:center;font-size:0.9rem;max-width:400px;">
+        <p style="margin-bottom:12px;">还没有配置 Umami 看板</p>
+        <p>部署 Umami 后在后台创建站点，获得 Website ID</p>
+      </div>
+    `;
+    if (status) status.textContent = '⚙️ 待配置';
+    return;
+  }
+
+  try {
+    const cfg = JSON.parse(saved);
+    if (status) status.textContent = '🟢 已连接';
+    const url = cfg.url.replace(/\/$/, '');
+    container.innerHTML = `
+      <div style="width:100%;display:flex;gap:8px;margin-bottom:12px;">
+        <button onclick="resetUmamiConfig()" style="padding:6px 14px;border:1px solid var(--admin-border);border-radius:6px;background:transparent;color:var(--admin-muted);cursor:pointer;font-size:0.8rem;">⚙️ 重新配置</button>
+        <a href="${url}" target="_blank" style="padding:6px 14px;border:1px solid var(--admin-border);border-radius:6px;background:transparent;color:var(--admin-primary);cursor:pointer;font-size:0.8rem;text-decoration:none;">🔗 打开 Umami</a>
+      </div>
+      <iframe src="${url}/share/${cfg.siteId}" style="width:100%;min-height:600px;border:none;border-radius:8px;"></iframe>
+    `;
+  } catch(e) {
+    container.innerHTML = '<div style="color:var(--admin-danger);">配置读取失败</div>';
+  }
+}
+
+function resetUmamiConfig() {
+  localStorage.removeItem('umamiConfig');
+  loadAnalytics();
+}
+
 function showToast(msg) {
   const t = document.getElementById('toast');
+  if (!t) return;
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 2500);
 }
 
 function escHtml(s) {
@@ -605,5 +654,69 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+// ===== 实时订阅（别人改数据时自动刷新）=====
+function subscribeAdminRealtime() {
+  if (!sb) return;
+
+  try {
+    // 监听 site_config
+    sb
+      .channel('admin-site-config')
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'site_config', filter: 'id=eq.1' },
+        async () => {
+          console.log('🦀 后台检测到设置变化，自动刷新');
+          await loadAllData();
+          if (currentTab === 'config') loadConfig();
+          showToast('🔄 设置已同步（来自他人修改）');
+        }
+      )
+      .subscribe();
+
+    // 监听 technicians
+    sb
+      .channel('admin-technicians')
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'technicians' },
+        async () => {
+          console.log('🦀 后台检测到技师变化，自动刷新');
+          // 记住当前打开的卡片
+          const openCards = [];
+          data.technicians.forEach((t, i) => {
+            const body = document.getElementById(`cardBody-${i}`);
+            if (body && body.classList.contains('open')) {
+              openCards.push(i);
+            }
+          });
+          await loadAllData();
+          if (currentTab === 'techs') {
+            renderTechs();
+            // 重新展开之前打开的卡片
+            setTimeout(() => {
+              openCards.forEach(i => {
+                const body = document.getElementById(`cardBody-${i}`);
+                const toggle = document.getElementById(`toggle-${i}`);
+                if (body && toggle) {
+                  body.classList.add('open');
+                  toggle.textContent = '▲';
+                }
+              });
+            }, 100);
+          }
+          showToast('🔄 技师数据已同步（来自他人修改）');
+        }
+      )
+      .subscribe();
+
+  } catch(e) {
+    console.warn('🦀 后台实时订阅失败:', e.message);
+  }
+}
+
 // ===== Init =====
-loadConfig();
+(() => {
+  loadAllData();
+  renderDatabaseConfig();
+  // 延迟一下等数据加载完再订阅
+  setTimeout(() => subscribeAdminRealtime(), 2000);
+})();
