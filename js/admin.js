@@ -109,8 +109,10 @@ function switchTab(tab) {
 // ===== 新增：数据库配置 Tab =====
 function renderDatabaseConfig() {
   const el = document.getElementById('tab-database');
-  const savedUrl = localStorage.getItem('supabase_url') || '';
-  const savedKey = localStorage.getItem('supabase_anon_key') || '';
+  const defaultUrl = (typeof SUPABASE_URL !== 'undefined' && !SUPABASE_URL.includes('YOUR')) ? SUPABASE_URL : '';
+  const defaultKey = (typeof SUPABASE_ANON_KEY !== 'undefined' && !SUPABASE_ANON_KEY.includes('YOUR')) ? SUPABASE_ANON_KEY : '';
+  const savedUrl = localStorage.getItem('supabase_url') || defaultUrl;
+  const savedKey = localStorage.getItem('supabase_anon_key') || defaultKey;
   el.innerHTML = `
     <div style="max-width:600px;">
       <h3 style="margin-bottom:16px;font-size:1.1rem;">☁️ Supabase 数据库设置</h3>

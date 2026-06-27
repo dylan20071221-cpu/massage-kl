@@ -74,10 +74,19 @@ async function loadFromSupabase() {
     return false;
   }
 
-  const url = localStorage.getItem('supabase_url');
-  const key = localStorage.getItem('supabase_anon_key');
+  // 优先读取 localStorage（admin 后台动态配置），否则使用硬编码配置
+  let url = localStorage.getItem('supabase_url');
+  let key = localStorage.getItem('supabase_anon_key');
 
   if (!url || !key || url.includes('YOUR_PROJECT')) {
+    // 尝试从 supabase-config.js 读取硬编码值
+    if (typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_ANON_KEY !== 'undefined') {
+      url = SUPABASE_URL;
+      key = SUPABASE_ANON_KEY;
+    }
+  }
+
+  if (!url || !key || url.includes('YOUR_PROJECT') || url.includes('YOUR')) {
     console.warn('🦀 Supabase 未配置，使用本地数据');
     return false;
   }
