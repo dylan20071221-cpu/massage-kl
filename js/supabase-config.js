@@ -1,18 +1,5 @@
 /**
  * 🦀 按按摩 - Supabase 配置
- *
- * 🔧 使用方式：
- * 1. 去 https://supabase.com 注册免费账号
- * 2. 创建新项目
- * 3. 在 Project Settings → API 里找到：
- *    - Project URL
- *    - anon public key
- * 4. 把下面的 SUPABASE_URL 和 SUPABASE_ANON_KEY 替换成你的
- * 5. 到 SQL Editor 执行 supabase/schema.sql
- * 6. 搞定！
- *
- * 注：也可以在 admin 管理后台里直接配置
- *     admin.html → 新增的 "☁️ 数据库设置" Tab
  */
 
 const SUPABASE_URL = 'https://egyfdetycxlgwdtyuofc.supabase.co';
