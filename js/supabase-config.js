@@ -2,8 +2,8 @@
  * 🦀 按按摩 - Supabase 配置
  */
 
-const SUPABASE_URL = 'https://egyfdetycxlgwdtyuofc.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVneWZkZXR5Y3hsZ3dkdHl1b2ZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NTExNTcsImV4cCI6MjA5ODEyNzE1N30.0C4PReYQZP2w93Hp_ztJsWLnu2ajvxYAi61QMZhyuUk';
+const SUPABASE_URL = 'https://ovbomkiaaokrdyqaecfq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92Ym9ta2lhYW9rcmR5cWFlY2ZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzOTIyOTMsImV4cCI6MjA5OTk2ODI5M30.ba8Wv1U5eVZg4wUsYuj1VaCLMrGSChmQzBx__KTgPnw';
 
 // ===== 初始化 =====
 let supabaseClient = null;
