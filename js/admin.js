@@ -7,9 +7,14 @@ let sb = null;
 
 // ===== Supabase 连接 =====
 function getSupabaseClient() {
-  const url = localStorage.getItem('supabase_url');
-  const key = localStorage.getItem('supabase_anon_key');
-  if (!url || !key || url.includes('YOUR_PROJECT')) return null;
+  // 优先 localStorage（用户手动配置），否则 fallback 到 supabase-config.js
+  const savedUrl = localStorage.getItem('supabase_url');
+  const savedKey = localStorage.getItem('supabase_anon_key');
+  const defaultUrl = (typeof SUPABASE_URL !== 'undefined' && !SUPABASE_URL.includes('YOUR')) ? SUPABASE_URL : '';
+  const defaultKey = (typeof SUPABASE_ANON_KEY !== 'undefined' && !SUPABASE_ANON_KEY.includes('YOUR')) ? SUPABASE_ANON_KEY : '';
+  const url = savedUrl || defaultUrl;
+  const key = savedKey || defaultKey;
+  if (!url || !key || url.includes('YOUR_PROJECT') || url.includes('YOUR')) return null;
   try {
     return supabase.createClient(url, key);
   } catch(e) {
