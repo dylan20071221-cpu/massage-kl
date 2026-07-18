@@ -7,11 +7,15 @@ let sb = null;
 
 // ===== Supabase 连接 =====
 function getSupabaseClient() {
-  // 优先 localStorage（用户手动配置），否则 fallback 到 supabase-config.js
+  // 优先 localStorage（用户手动配置），否则 fallback 到 window 或全局变量
   const savedUrl = localStorage.getItem('supabase_url');
   const savedKey = localStorage.getItem('supabase_anon_key');
-  const defaultUrl = (typeof SUPABASE_URL !== 'undefined' && !SUPABASE_URL.includes('YOUR')) ? SUPABASE_URL : '';
-  const defaultKey = (typeof SUPABASE_ANON_KEY !== 'undefined' && !SUPABASE_ANON_KEY.includes('YOUR')) ? SUPABASE_ANON_KEY : '';
+  const winUrl = window.__SUPABASE_URL || '';
+  const winKey = window.__SUPABASE_ANON_KEY || '';
+  const globalUrl = (typeof SUPABASE_URL !== 'undefined' && !SUPABASE_URL.includes('YOUR')) ? SUPABASE_URL : '';
+  const globalKey = (typeof SUPABASE_ANON_KEY !== 'undefined' && !SUPABASE_ANON_KEY.includes('YOUR')) ? SUPABASE_ANON_KEY : '';
+  const defaultUrl = winUrl || globalUrl;
+  const defaultKey = winKey || globalKey;
   const url = savedUrl || defaultUrl;
   const key = savedKey || defaultKey;
   if (!url || !key || url.includes('YOUR_PROJECT') || url.includes('YOUR')) return null;
@@ -114,8 +118,12 @@ function switchTab(tab) {
 // ===== 新增：数据库配置 Tab =====
 function renderDatabaseConfig() {
   const el = document.getElementById('tab-database');
-  const defaultUrl = (typeof SUPABASE_URL !== 'undefined' && !SUPABASE_URL.includes('YOUR')) ? SUPABASE_URL : '';
-  const defaultKey = (typeof SUPABASE_ANON_KEY !== 'undefined' && !SUPABASE_ANON_KEY.includes('YOUR')) ? SUPABASE_ANON_KEY : '';
+  const winUrl = window.__SUPABASE_URL || '';
+  const winKey = window.__SUPABASE_ANON_KEY || '';
+  const globalUrl = (typeof SUPABASE_URL !== 'undefined' && !SUPABASE_URL.includes('YOUR')) ? SUPABASE_URL : '';
+  const globalKey = (typeof SUPABASE_ANON_KEY !== 'undefined' && !SUPABASE_ANON_KEY.includes('YOUR')) ? SUPABASE_ANON_KEY : '';
+  const defaultUrl = winUrl || globalUrl;
+  const defaultKey = winKey || globalKey;
   const savedUrl = localStorage.getItem('supabase_url') || defaultUrl;
   const savedKey = localStorage.getItem('supabase_anon_key') || defaultKey;
   el.innerHTML = `
@@ -722,6 +730,18 @@ function subscribeAdminRealtime() {
 
 // ===== Init =====
 (() => {
+  // 自动使用内置配置（覆盖旧 localStorage 防止冲突）
+  const savedUrl = localStorage.getItem('supabase_url');
+  const savedKey = localStorage.getItem('supabase_anon_key');
+  const builtinUrl = window.__SUPABASE_URL || '';
+  const builtinKey = window.__SUPABASE_ANON_KEY || '';
+  // 如果 localStorage 的值和内置的不一样，替换掉
+  if (savedUrl !== builtinUrl || savedKey !== builtinKey) {
+    if (builtinUrl && builtinKey) {
+      localStorage.setItem('supabase_url', builtinUrl);
+      localStorage.setItem('supabase_anon_key', builtinKey);
+    }
+  }
   loadAllData();
   renderDatabaseConfig();
   // 延迟一下等数据加载完再订阅

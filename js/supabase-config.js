@@ -5,6 +5,10 @@
 const SUPABASE_URL = 'https://ovbomkiaaokrdyqaecfq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92Ym9ta2lhYW9rcmR5cWFlY2ZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzOTIyOTMsImV4cCI6MjA5OTk2ODI5M30.ba8Wv1U5eVZg4wUsYuj1VaCLMrGSChmQzBx__KTgPnw';
 
+// 挂载到 window 上，确保所有脚本都能访问
+window.__SUPABASE_URL = SUPABASE_URL;
+window.__SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
+
 // ===== 初始化 =====
 let supabaseClient = null;
 
