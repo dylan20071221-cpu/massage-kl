@@ -14,6 +14,11 @@ let cardEl = null;
 let cardPhotoIdx = 0; // 当前卡片显示第几张照片
 let gridPhotoIdx = {}; // 网格卡片照片索引 {techId: index}
 
+// 全局：判断是否为有效照片 URL（支持 data:/http/images/ 相对路径）
+function isPhotoUrl(p) {
+  return p && (p.startsWith('data:') || p.startsWith('http') || p.startsWith('images/') || p.startsWith('/images/'));
+}
+
 // ============================================
 //  首页 - Tinder滑动卡片
 // ============================================
@@ -47,7 +52,6 @@ function renderStack() {
   // 确保 cardPhotoIdx 不越界
   if (cardPhotoIdx >= totalCardPhotos) cardPhotoIdx = 0;
   const currentCardPhoto = totalCardPhotos > 0 ? allPhotos[cardPhotoIdx] : '';
-  const isPhotoUrl = (p) => p && (p.startsWith('data:') || p.startsWith('http') || p.startsWith('images/') || p.startsWith('/images/'));
   const hasCardPhoto = isPhotoUrl(currentCardPhoto);
   stack.innerHTML = `
     <div class="swipe-card" id="swipeCard">
@@ -409,7 +413,6 @@ function initDetail() {
   if (!t) { container.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-light);">找不到技师</div>'; return; }
   document.title = `${t.name} - ${(SITE_CONFIG && SITE_CONFIG.siteName) || '按按摩'}`;
   const photos = (t.photos && t.photos.length) ? t.photos : (t.photo ? [t.photo] : []);
-  const isPhotoUrl = (p) => p && (p.startsWith('data:') || p.startsWith('http') || p.startsWith('images/') || p.startsWith('/images/'));
   const hasPhotos = photos.some(isPhotoUrl);
   const mainPhoto = photos[0] || '';
   container.innerHTML = `
