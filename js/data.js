@@ -7,13 +7,18 @@
 // ===== 默认静态数据（32位技师，2026-07-25 后台导出） =====
 const SITE_CONFIG_STATIC = {
   "siteName": "大马顶级会所，顶级水疗",
-  "tagline": "Deploy test from Python",
+  "tagline": "我们服务宗旨：诚信经营：服务至上：怀着期待而来，装着满意而归，一次体验，此生无憾…",
   "whatsappNumber": "601114155848",
-  "telegram": "",
+  "telegram": "Dong0155",
   "areas": [
     "吉隆坡",
     "Cheras",
-    "Puchong"
+    "Puchong",
+    "Kajang",
+    "Setapak",
+    "Subang",
+    "Petaling Jaya",
+    "Ampang"
   ]
 };
 
