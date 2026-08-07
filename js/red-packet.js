@@ -330,7 +330,7 @@ function renderStack() {
 
   const g = currentGirls[currentIdx];
   const photos = g.photos || [];
-  const hasPhoto = photos.length > 0 && (photos[0].startsWith('data:') || photos[0].startsWith('http'));
+  const hasPhoto = photos.length > 0 && (photos[0].startsWith('data:') || photos[0].startsWith('http') || photos[0].startsWith('images/') || photos[0].startsWith('/images/'));
 
   stack.innerHTML = `
     <div class="swipe-card" id="swipeCard">
@@ -541,7 +541,7 @@ function showDetail(g) {
   title.textContent = `📋 ${g.name} 详情`;
 
   const photos = g.photos || [];
-  const hasPhoto = photos.length > 0 && (photos[0].startsWith('data:') || photos[0].startsWith('http'));
+  const hasPhoto = photos.length > 0 && (photos[0].startsWith('data:') || photos[0].startsWith('http') || photos[0].startsWith('images/') || photos[0].startsWith('/images/'));
 
   content.innerHTML = `
     <div class="rp-detail-cover" style="background:${hasPhoto ? '#111' : g.coverBg};">
@@ -640,7 +640,7 @@ function renderList() {
   }
   list.innerHTML = currentGirls.map(g => {
     const photos = g.photos || [];
-    const hasPhoto = photos.length > 0 && (photos[0].startsWith('data:') || photos[0].startsWith('http'));
+    const hasPhoto = photos.length > 0 && (photos[0].startsWith('data:') || photos[0].startsWith('http') || photos[0].startsWith('images/') || photos[0].startsWith('/images/'));
     return `
       <div class="rp-list-item" onclick="showDetail(barGirls.find(x=>x.id===${g.id}))">
         <div class="rp-list-avatar" style="background:${hasPhoto ? '#111' : g.coverBg};">

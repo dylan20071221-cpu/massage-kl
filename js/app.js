@@ -47,7 +47,8 @@ function renderStack() {
   // 确保 cardPhotoIdx 不越界
   if (cardPhotoIdx >= totalCardPhotos) cardPhotoIdx = 0;
   const currentCardPhoto = totalCardPhotos > 0 ? allPhotos[cardPhotoIdx] : '';
-  const hasCardPhoto = currentCardPhoto && (currentCardPhoto.startsWith('data:') || currentCardPhoto.startsWith('http'));
+  const isPhotoUrl = (p) => p && (p.startsWith('data:') || p.startsWith('http') || p.startsWith('images/') || p.startsWith('/images/'));
+  const hasCardPhoto = isPhotoUrl(currentCardPhoto);
   stack.innerHTML = `
     <div class="swipe-card" id="swipeCard">
       <div class="card-media" id="cardMedia" style="background:${hasCardPhoto ? '#000' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};${hasCardPhoto ? 'background-image:url('+currentCardPhoto+');background-size:cover;background-position:center;' : ''}">
@@ -327,7 +328,7 @@ function renderGrid(list) {
     if (gridPhotoIdx[t.id] === undefined) gridPhotoIdx[t.id] = 0;
     if (gridPhotoIdx[t.id] >= allGridPhotos.length) gridPhotoIdx[t.id] = 0;
     const gridMainPhoto = allGridPhotos.length > 0 ? allGridPhotos[gridPhotoIdx[t.id]] : '';
-    const hasGridPhoto = gridMainPhoto && (gridMainPhoto.startsWith('data:')||gridMainPhoto.startsWith('http'));
+    const hasGridPhoto = isPhotoUrl(gridMainPhoto);
     const extraInfo = '📏' + (t.height||'?') + ' ' + (t.weight||'?') + (t.bust ? ' 👙' + t.bust : '');
     return `
     <div class="grid-card">
@@ -408,7 +409,8 @@ function initDetail() {
   if (!t) { container.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-light);">找不到技师</div>'; return; }
   document.title = `${t.name} - ${(SITE_CONFIG && SITE_CONFIG.siteName) || '按按摩'}`;
   const photos = (t.photos && t.photos.length) ? t.photos : (t.photo ? [t.photo] : []);
-  const hasPhotos = photos.some(p => p.startsWith('data:')||p.startsWith('http'));
+  const isPhotoUrl = (p) => p && (p.startsWith('data:') || p.startsWith('http') || p.startsWith('images/') || p.startsWith('/images/'));
+  const hasPhotos = photos.some(isPhotoUrl);
   const mainPhoto = photos[0] || '';
   container.innerHTML = `
     <div class="detail-cover" id="detailCover" style="background:${hasPhotos ? '#111' : (t.coverBg || 'linear-gradient(135deg,#8B5CF6,#EC4899)')};overflow:hidden;">
