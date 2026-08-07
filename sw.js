@@ -3,7 +3,7 @@
  * 缓存策略：Cache First + Network Fallback
  */
 
-const CACHE_NAME = 'massage-kl-v1';
+const CACHE_NAME = 'massage-kl-v2';
 const PRECACHE_URLS = [
   '/',
   '/index.html',
